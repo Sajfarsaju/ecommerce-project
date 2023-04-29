@@ -1,0 +1,266 @@
+<%- include ('../layouts/user/header.ejs') %>
+<%- include ('../layouts/user/navbar.ejs') %>
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+
+<section class="" style="margin: 100px; border: 1px black;">
+
+  <table class="table align-middle mb-0 bg-white" id="reload">
+    <thead class="bg-light">
+      <tr>
+        <th>No</th>
+        <th>order Id</th>
+        <!-- <th>Quantity</th>  -->
+        <th>Date and Time</th>
+        <th>Amount</th>
+        <!-- <th>Delivery address</th> -->
+        <th>status</th>
+        <th>Actions</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody id="orderlist">
+      <% order.forEach((x,index)=>{%>
+      <tr>
+        <th scope="row"><%= index+1 %></th>
+        <td>
+          <p class="fw-normal mb-1"><%= x.orderId %></p><br>
+        </td>
+        <td>
+          <p class="fw-normal mb-1"><%= x.date.toLocaleString({ month: '2-digit', day: '2-digit', year: 'numeric' }) %></p><br>
+
+        </td>
+        <!-- <td>
+          <% x.product.forEach((element)=>{%>
+
+          <p class="fw-normal mb-1"><%= element.quantity %></p><br>
+          <%})%>
+
+        </td> -->
+
+        <td>
+          <p class="fw-normal mb-1"><%= x.total %></p>
+
+        </td>
+
+
+        <td>
+          <%  if(x.status==='confirmed'||x.status==='processing'||x.status==='Shipped'){ %>
+          <p class="" style="color: green; font-size: 16px;" ><%= x.status %></p>
+        <%} else if(x.status==='Delivered'){ %>
+          <p class=""  style="color: green; font-size: 16px;"  ><%= x.status %></p>
+          <% } else { %>
+            <p class=""  style="color: red; font-size: 16px;"  ><%= x.status %></p>
+            <% } %>
+
+
+
+
+        </td>
+        <%  if(x.status==='confirmed'||x.status==='processing'||x.status==='Shipped'){ %>
+        <td>
+          <!-- <a type="button" class="btn btn-outline-warning btn-sm  mb-2" href="#">Cancell</a> -->
+          <a onclick="cancellOrder('<%=x._id%>')" type="button" class="btn btn-sm btn-outline-warning"  href="#">Cancel</a>
+        </td>
+        <%} else if(x.status==='Delivered'){ %>
+        <td>
+          <!-- <a type="button" class="btn btn-outline-warning btn-sm  mb-2" href="#">Cancell</a> -->
+          <!-- main -->
+          <!-- <a onclick="returnOrder('<%=x._id%>')" type="button" class="btn btn-outline-danger btn-sm  mb-2" href="#">Return</a> -->
+
+          <!-- modal -->
+          
+            <% if (x.status === 'Delivered' && ((new Date() - new Date(x.date)) / (1000 * 60 * 60 * 24)) <= 1) { %>
+              <a onclick="returnOrder('<%=x._id%>')" type="button" class="btn btn-sm btn-outline-danger"  href="#">Return</a>
+            <% } else { %>
+             
+              <p style=" color: green;font-size: 16px;">
+                Delivered
+              </p>
+            <% } %>
+          <!-- </td> -->
+          
+        </td>
+
+        <!-- modal -->
+        <div id="returnModal" class="modal fade" tabindex="-1" role="dialog">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <!-- Modal content goes here -->
+              <form id="returnForm">
+                <!-- Form fields for return details -->
+                <!-- For example, you can include a textarea for the reason of return -->
+                <div class="form-group">
+                  <label for="returnReason">Reason for Return:</label>
+                  <textarea class="form-control" id="returnReason" name="returnReason" rows="3" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </form>
+            </div>
+          </div>
+        </div>
+        <!--  -->
+        <% }else{ %>
+        <td style="color: red; font-size: 16px;" >
+         <p ><%= x.status %></p> 
+        </td>
+        <% } %>
+        <td>
+          <a href="/orderDetails/<%=x._id%>">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-eye">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+          </a>
+        </td>
+      </tr>
+      <% })  %>
+    </tbody>
+  </table>
+
+<!-- modal -->
+<script>
+  function returnOrder(orderId) {
+  // Set the orderId to a hidden field in the form
+  document.getElementById("orderId").value = orderId;
+  // Show the modal
+  $('#returnModal').modal('show');
+}
+
+// Handle form submission
+document.getElementById("returnForm").addEventListener("submit", function (event) {
+  event.preventDefault(); // Prevent the form from submitting normally
+
+  // Get the order ID from the hidden field
+  var orderId = document.getElementById("orderId").value;
+
+  // Get the return reason from the textarea
+  var returnReason = document.getElementById("returnReason").value;
+
+  // Perform an AJAX request to submit the form data and trigger the return action
+  // You'll need to replace this with your actual AJAX code to handle the submission
+  // Here's an example using jQuery:
+  $.ajax({
+    url: "/returnOrder",
+    type: "POST",
+    data: {
+      orderId: orderId,
+      returnReason: returnReason
+    },
+    success: function (response) {
+      // Handle the success response
+      // For example, display a success message or redirect the user
+      console.log("Return successful");
+      // Hide the modal
+      $('#returnModal').modal('hide');
+    },
+    error: function (error) {
+      // Handle the error response
+      // For example, display an error message to the user
+      console.error("Return failed", error);
+    }
+  });
+});
+
+</script>
+<!--  -->
+
+
+</section>
+
+<script>
+  $(document).ready(function() {
+    $('#reload').DataTable();
+  });
+</script>
+
+
+<script>
+  function cancellOrder(ordId) {
+    console.log(ordId);
+
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You wan't to cancel order!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'yes, Cancel!',
+      cancelButtonText: 'No'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          url: '/cancellOrder',
+          data: {
+            orderId: ordId
+          },
+          method: 'post',
+          success: (response) => {
+            if (response.success) {
+              $('#reload').load('/vieworders #reload')
+              Swal.fire({
+                title: 'cancelled!',
+                text: 'Item removed from order',
+                icon: 'success',
+                timer: 1000,
+                showConfirmButton: false
+              })
+            }
+
+          }
+
+        })
+      }
+
+    })
+  }
+</script>
+
+
+
+
+
+<script>
+  function returnOrder(ordId) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You wan't to return order!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'yes, remove!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          url: '/returnOrder',
+          data: {
+            orderId: ordId
+          },
+          method: 'post',
+          success: (response) => {
+            if (response.success) {
+              $('#reload').load('/vieworders #reload')
+              Swal.fire({
+                title: 'returned!',
+                text: 'Order returned',
+                icon: 'success',
+                timer: 1000,
+                showConfirmButton: false
+              })
+            }
+          }
+        })
+      }
+    })
+
+
+  }
+</script>
+
+
+
+
+<%- include ('../layouts/user/footer.ejs') %>

@@ -1,0 +1,36 @@
+<%- include('../layouts/header.ejs') %>
+<%- include('../layouts/navbar.ejs') %>
+<%- include('../layouts/sidebar.ejs') %>
+
+<div class="main-panel">        
+  <div class="content-wrapper">
+    <div class="row">
+      <div class="col-md-6 grid-margin stretch-card">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">Edit Category</h4>
+            <% if (errorMessage) { %>
+              <div class="alert alert-danger" role="alert">
+                <%= errorMessage %>
+              </div>
+            <% } %>
+            
+            
+            <form class="forms-sample" action="/admin/editCategory" method="post">
+              <div class="form-group">
+                <input type="text" class="form-control" name="category" value="<%= catogeries.name %>">
+                <label for="category">Category</label>
+              </div>
+              <div class="form-group">
+                <input type="text" class="form-control" name="description" value="<%= catogeries.description %>">
+                <label for="description">Description</label>
+              </div>
+              <input type="hidden" name="id" value="<%= catogeries._id %>">
+              <button type="submit" class="btn btn-primary mr-2">Save</button>
+            </form>
+          </div>
+        </div>
+      </div>
+   
+
+<%- include('../layouts/footer.ejs') %>

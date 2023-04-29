@@ -1,0 +1,186 @@
+<%- include('../layouts/user/header.ejs') %>
+<%- include('../layouts/user/navbar.ejs') %>
+
+
+<section class="banner_area">
+  <div class="banner_inner d-flex align-items-center">
+    <div class="container">
+      <div
+        class="banner_content d-md-flex justify-content-between align-items-center"
+      >
+        <div class="mb-3 mb-md-0">
+          <h2>Product Details</h2>
+          <p>Very us move be blessed multiply night</p>
+        </div>
+        <div class="page_link">
+          <a href="index.html">Home</a>
+          <a href="single-product.html">Product Details</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!--================End Home Banner Area =================-->
+
+<!--================Single Product Area =================-->
+<div class="product_image_area">
+  <div class="container">
+    <div class="row s_product_inner">
+      <div class="col-lg-5">
+        <div class="s_product_img">
+          <!-- <div
+            id="carouselExampleIndicators"
+            class="carousel slide"
+            data-ride="carousel"
+          > -->
+            <!-- <ol class="carousel-indicators">
+              <li
+                data-target="#carouselExampleIndicators"
+                data-slide-to="0"
+                class="active"
+              >
+                <img style="height: 60px;width: 60px;" class="img-fluid w-100"
+                  src="/productImages/<%= productDetails.image[0]%>"
+                  alt=""
+                />
+              </li>
+              <li
+                data-target="#carouselExampleIndicators"
+                data-slide-to="1"
+              >
+                <img style="height: 60px;width: 60px;" class="img-fluid w-100"
+                src="/productImages/<%= productDetails.image[1]%>"
+                  alt=""
+                />
+              </li>
+              <li
+                data-target="#carouselExampleIndicators"
+                data-slide-to="2"
+              >
+                <img style="height: 60px;width: 60px;" class="img-fluid w-100"
+                src="/productImages/<%= productDetails.image[2]%>"
+                  alt=""
+                />
+              </li>
+            </ol> -->
+            <!-- 1 -->
+            <!-- <div class="carousel-inner">
+              <div class="xzoom-container carousel-item active">
+                <img
+                  class=" xzoom d-block w-100"
+                  id="xzoom-default"  
+                  src="/productImages/<%= productDetails.image[0]%>"
+                  alt="First slide"
+                />
+              </div> -->
+              <!-- 1 -->
+              <div class="xzoom-container">
+                <img class="xzoom" width="100%" height="40%"  id="xzoom-default" src="/productImages/<%= productDetails.image[0]%>" xoriginal="/productImages/<%= productDetails.image[0]%>" />
+              </div>    
+
+              <div class="xzoom-thumbs" style="text-align: start;">
+                <a style="height: 80px; " href="/productImages/<%= productDetails.image[0]%>"><img  class="xzoom-gallery" width="80" height="80px" src="/productImages/<%= productDetails.image[0]%>" xpreview="/productImages/<%= productDetails.image[0]%>" ></a>
+                <a href="/productImages/<%= productDetails.image[1]%>"><img  class="xzoom-gallery" width="80" height="80px" src="/productImages/<%= productDetails.image[1]%>" ></a>
+                <a href="/productImages/<%= productDetails.image[2]%>"><img  class="xzoom-gallery" width="80" height="80px" src="/productImages/<%= productDetails.image[2]%>" ></a>
+             
+            </div>
+              <!--1  -->
+
+              <!-- 2 -->
+              <!-- <div class="carousel-item">
+                <img
+                  class="xzoom-gallery d-block w-100"
+                  src="/productImages/<%= productDetails.image[1]%>"
+                  alt="Second slide"
+                />
+              </div> -->
+
+              
+              <!-- 2 -->
+
+              <!-- 3 -->
+              <!-- <div class="carousel-item">
+                <img
+                  class="xzoom-gallery d-block w-100"
+                  src="/productImages/<%= productDetails.image[2]%>"
+                  alt="Third slide"
+                />
+              </div> -->
+
+              
+            <!-- </div> -->
+          </div>
+        </div>
+     
+      <div class="col-lg-6 offset-lg-1">
+        <div class="s_product_text">
+          <h3><%= productDetails.name%></h3>
+          <h2>₹<%= productDetails.price%></h2>
+          <ul class="list">
+            <li>
+              <a class="active text-decoration-none" href="#">
+                <span>Category</span> : <%= productDetails.category.name%></</a
+              >
+            </li>
+            <li>
+              <a class="text-decoration-none" href="#"> <span>Availibility</span> : In Stock</a>
+            </li>
+          </ul>
+          <p>
+            <%= productDetails.description%>
+          </p>
+          <div class="card_area">
+            <% if (typeof user!== 'undefined') { %>
+              <a class="main_btn text-decoration-none btn-addwish-b2 dis-block pos-relative" onclick="addToCart('<%=productDetails._id%>','<%=productDetails.price%>')">Add to Cart</a>
+            <% } else { %>
+              <a class="main_btn text-decoration-none btn-addwish-b2 dis-block pos-relative" href="/login">Login to Add to Cart</a>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+ </div>
+</div>
+<br><br>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://payalord.github.io/xZoom/js/vendor/jquery.js"></script>
+  <script type="text/javascript" src="https://payalord.github.io/xZoom/source/js/xzoom.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://payalord.github.io/xZoom/css/xzoom.css" media="all" /> 
+  <script type="text/javascript" src="https://payalord.github.io/xZoom/js/setup.js"></script>
+
+<script>
+  function addToCart(proId, price) {
+    $.ajax({
+      url: '/addTocart',
+      data: {
+        productId: proId,
+        productPrice: price
+      },
+      method: "post",
+      success: (response) => {
+        if (response.success) {
+          $('.bg0').load('/wishlist .bg0')
+          console.log(response);
+          Swal.fire({
+            title: 'Added',
+            text: 'Item added to Cart',
+            icon: 'success',
+            timer: 1000,
+            showConfirmButton: false
+          })
+        } else {
+          Swal.fire({
+            text: 'Item already in Cart',
+            icon: 'info',
+            timer: 1000,
+            showConfirmButton: false
+          })
+        }
+
+      }
+    })
+  }
+</script>
+<%- include('../layouts/user/footer.ejs') %>

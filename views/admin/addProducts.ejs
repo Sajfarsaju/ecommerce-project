@@ -1,0 +1,55 @@
+<%- include('../layouts/header.ejs') %>
+<%- include('../layouts/navbar.ejs') %>
+<%- include('../layouts/sidebar.ejs') %>
+
+<div class="main-panel">        
+  <div class="content-wrapper">
+    <div class="row">
+      <div class="col-md-6 grid-margin stretch-card">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">ADD PRODUCT</h4>
+            <p class="card-description">
+              Add a new product
+            </p>
+            <form class="forms-sample" action="" method="post" enctype="multipart/form-data">
+              <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" id="productName" name="name" placeholder="Enter product name" required>
+              </div>
+              <div class="form-group">
+                <label for="image">Image</label>
+                <input multiple type="file" accept="image/*" name="image" class="form-control" id="image">
+              </div>
+              <div class="form-group">
+                <label for="category">Category</label>
+                <select class="form-control" id="category" name="category" required>
+                  <option value="">Categories</option>
+                  <% for(category of categories){%>
+                    <% if(category.status) { %>
+                    <option value="<%= category._id %>">
+                      <%= category.name %>
+                    </option>
+                 <% } %>
+                 <% } %>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="description">Description</label>
+                <input type="text" class="form-control" id="description" name="description" placeholder="Enter description" required>
+              </div>
+              <div class="form-group">
+                <label for="stock">Stock</label>
+                <input  min="1" inputmode="numeric" type="number" class="form-control" name="stock" required>
+              </div>
+              <div class="form-group">
+                <label for="price">price</label>
+                <input type="number" class="form-control" id="price" name="price" placeholder="Enter price" required>
+              </div>
+              <button type="submit" class="btn btn-primary mr-2">Submit</button>
+              <!-- <button class="btn btn-light">Cancel</button> -->
+            </form>
+          </div>
+        </div>
+      </div>
+<%- include('../layouts/footer.ejs') %>

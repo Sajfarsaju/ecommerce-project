@@ -1,0 +1,265 @@
+<%- include ('../layouts/user/header.ejs') %>
+  <%- include ('../layouts/user/navbar.ejs') %>
+  <section style="background-color: #fafafa; width: 100%;">
+    <div class="container  p-t-80 pb-5">
+      <div class="row">
+        <div class="col">
+          <nav aria-label="breadcrumb" class="bg-light rounded-3 p-3 mb-4">
+
+          </nav>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-lg-4">
+          <div class="card mb-4">
+            <div class="card-body text-center">
+              <img src="https://static.vecteezy.com/system/resources/thumbnails/005/129/844/small/profile-user-icon-isolated-on-white-background-eps10-free-vector.jpg" alt="avatar" class="rounded-circle img-fluid" style="width: 150px;">
+              <h5 class="my-3 text-capitalize"><%= user.userName%></h5>
+              <hr>
+              <div class="d-flex justify-content-center  ">
+                <a type="button" class="btn btn-outline-info" href="/viewAddress">Manage Addresses</a>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="col-lg-8">
+          <div class="card mb-1 mb-2">
+            <div class="card-body ">
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0">Full Name</p>
+                </div>
+                <div class="col-sm-9">
+                  <p class="text-muted mb-0"><%= user.name %></p>
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0">Email</p>
+                </div>
+                <div class="col-sm-9">
+                  <p class="text-muted mb-0"><%= user.email %></p>
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0">Mobile</p>
+                </div>
+                <div class="col-sm-9">
+                  <p class="text-muted mb-0"><%= user.mobile%></p>
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0 text-success ">Wallet</p>
+                </div>
+                <div class="col-sm-9">
+                  <p class="text-success mb-0">₹<%= user.wallet%></p>
+                </div>
+              </div>
+
+
+
+              <hr>
+              <button type="button" class="btn btn-link  mr-1" data-toggle="modal" data-target="#<%=user._id %>">
+                Edit
+              </button>
+
+              <div class="modal fade" id="<%=user._id %>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title font-weight-bold " id="exampleModalLabel">Edit Address</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <form class="mb-0" action="/editProfile/<%=user._id %>" method="post">
+                        <style>
+                          input::-webkit-outer-spin-button,
+                          input::-webkit-inner-spin-button {
+                            -webkit-appearance: none;
+                            margin: 0;
+                          }
+                        </style>
+                        <div class="row mb-4">
+                          <div class="col-12">
+                            <div class="form-outline">
+                              <input type="text" id="form9Example1" class="form-control input-custom" name="Name" value="<%= user.name %>" />
+                              <label class="form-label" for="form9Example1">name</label>
+                            </div>
+                          </div>
+
+                          <div class="col-12 mb-4">
+                            <div class="form-outline">
+                              <input type="text" id="form9Example1" class="form-control input-custom" name="email" value="<%= user.email %>" />
+                              <label class="form-label" for="form9Example1">email</label>
+                            </div>
+                          </div>
+                        </div>
+
+                        <% if(typeof message!=="undefined"){%>
+                        <h1 style="font-size:16px;color:rgb(156, 2, 2);"><%=message %></h1>
+                        <%}%>
+                
+                        <div class="modal-footer  ">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                          <button type="submit"  class="btn btn-primary">Save changes</button>
+                        </div>  
+                     </form>
+                    </div>
+                 </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        <!-- Button trigger modal -->
+        <a type="button" onclick="changePassword('<%=user._id%>')" class="btn btn-outline-info" href="#" data-toggle="modal" data-target="#changePassword">Change Password </a>
+
+                        <div class="modal fade" id="changePassword" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                          <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title font-weight-bold text-info " id="exampleModalLabel">Change Password</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                <form class="mb-0" action="/changePassword/<%=user._id %>" method="post" id="Password">
+                                  <style>
+                                    input::-webkit-outer-spin-button,
+                                    input::-webkit-inner-spin-button {
+                                      -webkit-appearance: none;
+                                      margin: 0;
+                                    }
+                                  </style>
+                                  <div class="row mb-2">
+                                    <div class="col-12 mb-4">
+                                      <div class="form-outline">
+                                        <input type="hidden" id="userId" value="<%=user._id%>">
+                                        <input type="password" id="oldPassword" class="form-control input-custom" name="oldPassword" placeholder="Enter old Password" />
+                                      </div>
+                                    </div>
+
+                                    <div class="col-12 mb-4">
+                                      <div class="form-outline">
+                                        <input type="password" id="newPassword" class="form-control input-custom" name="newPassword" placeholder="Enter new Password" />
+                                      </div>
+                                    </div>
+
+                                    <div class="col-12 mb-4">
+                                      <div class="form-outline">
+                                        <input type="password" id="confirmPassword" class="form-control input-custom" name="confirmPassword" placeholder="Confirm Password" />
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div class="alert alert-success" role="alert" id="alertDiv" style="display: none;">
+                                  </div>
+
+                                  <% if(typeof message!=="undefined"){%>
+                                  <h1 style="font-size:16px;color:rgb(156, 2, 2);"><%=message %></h1>
+                                  <%}%>
+        
+                                  <div class="modal-footer  ">
+                                    <button type="button" class="btn btn-outline-warning" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-outline-success">Save changes</button>
+                                  </div>  
+                               </form>
+                              </div>
+                           </div>
+                          </div>
+                        </div>
+
+                        <a type="button" class="btn btn-outline-info" href="/vieworders">My orders</a>
+                      </div>
+                  </div>
+                </div>
+
+
+              </section>
+
+                <%- include ('../layouts/user/footer.ejs') %>
+
+                                  <script>
+                                    const form = document.getElementById('Password');
+                                    const inputs = form.querySelectorAll('input');
+
+                                    form.addEventListener('submit', (event) => {
+                                      event.preventDefault();
+                                      let nullFields = false;
+                                      for (let i = 0; i < inputs.length; i++) {
+                                        if (inputs[i].value == '') {
+                                          nullFields = true;
+                                          $('#alertDiv').show().html('All fields are required!!');
+                                          setTimeout(() => {
+                                            $('#alertDiv').fadeOut('slow');
+                                          }, 5000);
+                                          break;
+                                        }
+                                      }
+                                      if (!nullFields) {
+
+                                        const userId = document.getElementById('userId').value;
+                                        const oldPassword = document.getElementById('oldPassword').value;
+                                        const newPassword = document.getElementById('newPassword').value;
+                                        const confirmPassword = document.getElementById('confirmPassword').value;
+                                        const data = {
+                                          userId,
+                                          oldPassword,
+                                          newPassword,
+                                          confirmPassword
+                                        };
+                                        changePassword(data);
+                                      }
+                                    });
+
+                                    function changePassword(data) {
+                                      $.ajax({
+                                        url: '/changePassword',
+                                        data: data,
+                                        method: "post",
+
+                                        success: function(response) {
+
+                                          if (response.success) {
+                                            $('#alertDiv').removeClass('alert-danger').addClass('alert-success').show().html("password changed successfully");
+                                            setTimeout(() => {
+                                              $('#alertDiv').fadeOut('slow');
+                                              //hide modal
+                                              $('#changePassword').on('hidden.bs.modal', function() {});
+                                              $('#changePassword').modal('hide');
+                                            }, 5000);
+
+                                          } else if (response.different) {
+
+                                            $('#alertDiv').removeClass('alert-success').addClass('alert-danger').show().html("new passwords are diffrnet");
+                                            setTimeout(() => {
+                                              $('#alertDiv').fadeOut('slow');
+                                            }, 5000);
+
+                                          } else if (response.notmatch) {
+                                            $('#alertDiv').removeClass('alert-success').addClass('alert-danger').show().html("Old Password mismatch");
+                                            setTimeout(() => {
+                                              $('#alertDiv').fadeOut('slow');
+                                            }, 5000);
+                                          }
+                                        },
+                                        error: function(xhr, status, error) {
+                                          console.error(xhr);
+                                        }
+                                      });
+                                    }
+                                  </script>
+
+</body>
+
+</html>

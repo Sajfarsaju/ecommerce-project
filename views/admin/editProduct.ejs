@@ -1,0 +1,70 @@
+<%- include('../layouts/header.ejs') %>
+<%- include('../layouts/navbar.ejs') %>
+<%- include('../layouts/sidebar.ejs') %>
+
+<div class="main-panel">        
+  <div class="content-wrapper">
+    <div class="row">
+      <div class="col-md-6 grid-margin stretch-card">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">Edit Product</h4>
+            <form class="forms-sample" action="" method="post" enctype="multipart/form-data">
+              <div class="form-group">
+                <label for="product">Product Name</label>
+                <input type="text" class="form-control" name="product" value="<%= productId.name %>">
+              </div>
+              <div class="form-group">
+                <label for="product">Product Image</label>
+                <input type="file" class="form-control" accept="image/*"   name="image" multiple="multiple">
+
+                <% for(let i=0;i<productId.image.length ; i++){ %>
+                  <img src="/productImages/<%=productId.image[i]%>" alt="" width="100px" height="100px">
+
+                  <a href="/admin/deletImage?index=<%=i%>&productId=<%=productId._id%>" class="delete-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="Red" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash">
+                      
+                      <polyline points="3 6 5 6 21 6"></polyline>
+                      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    </svg>
+                  </a>
+
+                  <!-- <a
+                   href="/admin/deletImage?index=<%=i%>&productId=<%=productId._id%>"
+                   style="color:black;"><img style="width: 20px;height: 20px;" src="https://t4.ftcdn.net/jpg/03/46/38/39/360_F_346383913_JQecl2DhpHy2YakDz1t3h0Tk3Ov8hikq.jpg" alt=""></a>  -->
+                <% } %>
+                
+              </div>
+              <div class="form-group">
+                <label for="category">Category</label>
+                <select class="form-control" id="category" name="category" required>
+                  <% for(category of categories){%>
+                    <% if (category._id.toString() === productId.category._id.toString()) { %>
+                      <option value="<%= category._id %>" selected>
+                        <%= category.name %>
+                      </option>
+                    <% } else { %>
+                      <option value="<%= category._id %>">
+                        <%= category.name %>
+                      </option>
+                    <% } %>
+                  <% } %>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="description">Description</label>
+                <input type="text" class="form-control" name="description" value="<%= productId.description %>">
+              </div>
+              <div class="form-group">
+                <label for="stock">Stock</label>
+                  <input min="1" inputmode="numeric" type="number" class="form-control" name="stock" value="<%= productId.stock %>">
+                </select>
+              </div>
+              <input type="hidden" name="id" value="<%= productId._id %>">
+              <button type="submit" class="btn btn-primary mr-2">Save</button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+<%- include('../layouts/footer.ejs') %>

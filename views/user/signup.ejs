@@ -1,0 +1,162 @@
+<%- include('../layouts/header.ejs') %>
+
+<body>
+  <div class="container-scroller">
+    <div class="container-fluid page-body-wrapper full-page-wrapper">
+      <div class="content-wrapper d-flex align-items-center auth px-0">
+        <div class="row w-100 mx-0">
+          <div class="col-lg-4 mx-auto">
+            <div class="auth-form-light text-left py-5 px-4 px-sm-5 rounded shadow">
+              <!-- <div class="brand-logo text-center mb-4">
+                <img src="/assets/images/logo.svg" alt="logo">
+              </div> -->
+              <h4 class="text-center mb-4"  style="color: #71cd14cf;">Create an Account</h4>
+              <form class="pt-3" method="post" onsubmit="return validateForm()">
+                <div class="form-group">
+                  <!-- <label for="name"></label> -->
+                  <input type="text" class="form-control " id="form3Example1c name" name="name" style="border-radius: 0px; font-size: 17px; border: #71cd1494 solid 1px; height: 50px;" placeholder="Enter your username" required>
+                </div>
+                <div class="form-group">
+                  <!-- <label for="email"></label> -->
+                  <input type="email" class="form-control " id="form3Example3c email" name="email" style="border-radius: 0px; font-size: 17px; border: #71cd1494 solid 1px; height: 50px;" placeholder="Enter your email" required>
+                </div>
+
+                <!-- <div class="form-group">
+                  <label for="password">Password</label>
+                  <input type="password" class="form-control " id="password" name="password" placeholder="Enter your password" required>
+                </div>
+                <div class="form-group">
+                  <label for="confirm_password">Confirm Password</label>
+                  <input type="password" class="form-control " id="confirm_password" name="confirm_password" placeholder="Enter your password again" required>
+                  <div class="invalid-feedback">
+                    <h4>Passwords do not match.</h4>
+                  </div>
+                </div> -->
+
+                <!-- this is checking all character but if passwrod is very weak form going to otp page -->
+                <!-- <div class="form-group">
+                  <label for="password">Password</label>
+                  <input type="password" class="form-control " id="password" name="password" placeholder="Enter your password" required>
+                  <div id="password-strength-container"></div>
+                </div>
+                <div class="form-group">
+                  <label for="confirm_password">Confirm Password</label>
+                  <input type="password" class="form-control " id="confirm_password" name="confirm_password" placeholder="Enter your password again" required>
+                  <div class="invalid-feedback">
+                    <h4>Passwords do not match.</h4>
+                  </div>
+                </div> -->
+
+                <div class="form-group">
+                  <!-- <label for="password"></label> -->
+                  <input type="password" class="form-control " id="password" name="password" style="border-radius: 0px; font-size: 17px; border: #71cd1494 solid 1px; height: 50px;" placeholder="Enter your password" required>
+                  <div id="password-strength-container"></div>
+                </div>
+                <div class="form-group">
+                  <!-- <label for="confirm_password"></label> -->
+                  <input type="password" class="form-control " id="confirm_password" name="confirm_password" style="border-radius: 0px; font-size: 17px; border: #71cd1494 solid 1px; height: 50px;" placeholder="Enter your password again" required>
+                  <div class="invalid-feedback">
+                    Passwords do not match.
+                  </div>
+                </div>
+                
+
+                <div class="form-group">
+                  <!-- <label for="mno"></label> -->
+                  <input type="tel" class="form-control " id="form3Example3c number" name="mno" style="border-radius: 0px; font-size: 17px; border: #71cd1494 solid 1px; height: 50px;" placeholder="Enter your mobile number" required>
+                </div>
+                <% if (typeof message !== 'undefined') { %>
+                  <div class="text-danger" id=".error">
+                    <%= message %>
+                  </div>
+                <% } %>
+                <div class="mt-4">
+                  <button type="submit" class="btn btn-block font-weight-medium" style="background: #71cd14d7;color: white;   border: 1px solid #71cd14af; border-radius: 3px;">Sign Up</button>
+                </div>
+                <div class="text-center mt-4 font-weight-light">
+                  Already have an account? <a href="/login"  style="color: #6bd303;" >Login</a>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- content-wrapper ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+  </div>
+</body>
+
+
+<!--Confirm password check -->
+<script>
+  const passwordInputt = document.getElementById('password');
+  const confirmInput = document.getElementById('confirm_password');
+
+  confirmInput.addEventListener('input', () => {
+    if (confirmInput.value !== passwordInputt.value) {
+      confirmInput.setCustomValidity('Passwords do not match.');
+    } else {
+      confirmInput.setCustomValidity('');
+    }
+  });
+</script>
+<!--Confirm password check end-->
+
+
+
+<!-- password strength check -->
+<script>
+  var passwordInput = document.getElementById('password');
+  var passwordStrengthContainer = document.getElementById('password-strength-container');
+
+  passwordInput.addEventListener('input', function () {
+    var password = passwordInput.value;
+    var passwordStrength = checkPasswordStrength(password);
+
+    if (passwordStrength === 'very_weak') {
+      passwordStrengthContainer.innerHTML = 'Password strength: Very weak';
+    } else if (passwordStrength === 'weak') {
+      passwordStrengthContainer.innerHTML = 'Password strength: Weak';
+    } else if (passwordStrength === 'fair') {
+      passwordStrengthContainer.innerHTML = 'Password strength: Fair';
+    } else if (passwordStrength === 'strong') {
+      passwordStrengthContainer.innerHTML = 'Password strength: Strong';
+    } else if (passwordStrength === 'very_strong') {
+      passwordStrengthContainer.innerHTML = 'Password strength: Very strong';
+    }
+  });
+
+  function checkPasswordStrength(password) {
+    var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$])[A-Za-z\d!@#$]{6,}$/;
+    if (passwordRegex.test(password)) {
+      return 'very_strong';
+    } else if (password.length >= 6 && password.match(/[a-z]/) && password.match(/[A-Z]/) && password.match(/\d/) && password.match(/[!@#$]/)) {
+      return 'strong';
+    } else if (password.length >= 6 && password.match(/[a-z]/) && password.match(/[A-Z]/) && password.match(/\d/)) {
+      return 'fair';
+    } else if (password.length >= 6 && password.match(/[a-z]/) && password.match(/[A-Z]/)) {
+      return 'weak';
+    } else {
+      return 'very_weak';
+    }
+  }
+  
+  function validateForm() {
+    var password = document.getElementById('password').value;
+    var passwordStrength = checkPasswordStrength(password);
+    
+    if (passwordStrength === 'very_weak') {
+      alert('Your password is very weak. Please choose a stronger password.');
+      return false;
+    } else if(passwordStrength === 'weak'){
+      alert('Your password is weak. Please choose a stronger password.');
+    }else{
+      return true;
+    }
+  }
+</script>
+<!-- password strength check end -->
+
+
+<%- include('../layouts/footer.ejs') %>

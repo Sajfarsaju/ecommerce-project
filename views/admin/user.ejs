@@ -1,0 +1,189 @@
+<%- include('../layouts/header.ejs') %> 
+<%- include('../layouts/navbar.ejs') %>
+<%- include('../layouts/sidebar.ejs') %>
+<!-- Block icon -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+<style>
+  .material-symbols-outlined {
+    font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 48
+  }
+  </style>
+  <!-- block icon end -->
+
+  <!-- Unblock icon -->
+  <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings:
+      'FILL' 0,
+      'wght' 400,
+      'GRAD' 0,
+      'opsz' 48
+    }
+    </style> -->
+    <!-- unblock close icon -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+    <style>
+      .material-symbols-outlined {
+        font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 48
+      }
+      </style>
+<!--  -->
+
+  <!-- User Active icon -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,500,0,0" />
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings:
+      'FILL' 0,
+      'wght' 500,
+      'GRAD' 0,
+      'opsz' 48
+    }
+    </style>
+  <!--  -->
+  <!-- user not active icon -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings:
+      'FILL' 0,
+      'wght' 400,
+      'GRAD' 0,
+      'opsz' 48
+    }
+    </style>
+  <!--  -->
+      <div class="main-panel">
+        <div class="content-wrapper">
+          <div class="row">
+            <div class="col-lg-12 grid-margin stretch-card">
+              <div class="card">
+                <div class="card-body">
+                  <h4 class="card-title">USERS</h4>
+                  <div class="row justify-content-end">
+                    
+                  </div>                  
+                  <div class="table-responsive">
+                    <table class="table table-striped">
+                      <thead>
+                        <tr>
+                          <th class="text-center">
+                            No.
+                          </th>
+                          <th class="text-center">
+                             Name
+                          </th>
+                          <th class="text-center">
+                            email
+                          </th>
+                          <th class="text-center">
+                            mobile
+                          </th>
+                          <th class="text-center">
+                            status
+                          </th>
+                          <th class="text-center">
+                            Action
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody class="text-center">
+                        <%
+                        if(user.length > 0) {
+                          for(let i=0; i <user.length; i++){
+                            %>
+                            <tr >
+                              <td class="mt-3"><%= i+1 %></td>
+                              <td><%= user[i].name %></td>
+                              <td><%= user[i].email %></td>
+                                <td><%= user[i].mobile %></td>
+                                <td > 
+                                  <% if(user[i].status) {%>
+                                    <span class="material-symbols-outlined text-success">
+                                      check_circle
+                                      </span>
+                                      <p class="text-success">Active</p>
+                                </td>
+                                    <td>
+                                      <a style="text-decoration: none;" type="button" class="text-danger" href="/admin/useractive?id=<%=user[i]._id%>">
+                                        <span class="material-symbols-outlined">
+                                        block
+                                        </span>
+                                        <p>Block</p>
+                                      </a>
+                                      
+                                    </td>
+                                    <% }else{%>
+                                      <!-- <td class=""> -->
+                                        <span class="material-symbols-outlined text-danger">
+                                          cancel
+                                          </span>
+                                          <p class="text-danger">Unactive</p>
+                                  <!-- </td> -->
+                                    <td>
+                                      <a style="text-decoration: none;" type="button" class="text-success" href="/admin/useractive?id=<%=user[i]._id%>">
+                                        <!-- <span class="material-symbols-outlined">
+                                          dangerous
+                                          </span> -->
+                                          <span class="material-symbols-outlined">
+                                            close
+                                            </span>
+                                          <p>Unblock</p>
+                                      </a>
+                                    </td>
+                                    <% } %>                     
+          
+                          </tr>
+                          <%
+                          }
+                        }else{
+                          %>
+                          <tr> 
+                            <td colspan = "5" class="alert alert-danger">Category Not Found </td>
+                            </tr>
+                            <%
+                        }
+                        %>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
+<script>
+    const deleteButtons = document.querySelectorAll('.delete-btn');
+    deleteButtons.forEach(button => {
+        button.addEventListener('click', (event) => {
+            event.preventDefault();
+            const deleteUrl = button.getAttribute('href');
+            swal({
+                title: "Are you sure?",
+                text: "Once deleted, you will not be able to recover this user!",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            })
+            .then((willDelete) => {
+                if (willDelete) {
+                    window.location.href = deleteUrl;
+                }
+            });
+        });
+    });
+</script>
+<%- include('../layouts/footer.ejs') %>

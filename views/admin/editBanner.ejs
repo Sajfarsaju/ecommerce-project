@@ -1,0 +1,40 @@
+<%- include('../layouts/header.ejs') %>
+<%- include('../layouts/navbar.ejs') %>
+<%- include('../layouts/sidebar.ejs') %>
+
+<div class="main-panel">        
+    <div class="content-wrapper">
+      <div class="row">
+        <div class="col-md-6 grid-margin stretch-card">
+          <div class="card">
+            <div class="card-body">
+              <h4 class="card-title">Edit BANNER</h4>
+              <p class="card-description">
+                Edit banner
+              </p>
+             
+                <% for (let i = 0; i < banner.length; i++) { %>
+              <form class="forms-sample" action="" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                  <label for="name">Name</label>
+                  <input type="text" class="form-control" id="productName" name="name" value="<%= banner[i].name %>" required>
+                </div>
+                <div class="form-group">
+                  <label for="description">Description</label>
+                  <input type="text" class="form-control" id="description" name="description" value="<%= banner[i].description %>" required>
+                </div>
+                <div class="form-group">
+                  <label for="image">Image</label>
+                  <input multiple="multiple" accept="image/*" type="file" name="image" class="form-control" >
+                  <img style="height: 100px;width: 100px;" src="/productImages/<%=banner[i].image;%>" alt="">
+                </div>
+                <button type="submit" class="btn btn-primary mr-2">Save</button>
+                <!-- <button class="btn btn-light">Cancel</button> -->
+              </form>
+              <% } %>
+            </div>
+          </div>
+        </div>
+
+
+<%- include('../layouts/footer.ejs') %>

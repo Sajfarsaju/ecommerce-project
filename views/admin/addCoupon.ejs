@@ -1,0 +1,50 @@
+<%- include('../layouts/header.ejs') %>
+<%- include('../layouts/navbar.ejs') %>
+<%- include('../layouts/sidebar.ejs') %>
+
+<div class="main-panel"> 
+  <form action="" method="post">       
+  <div class="content-wrapper">
+    <div class="row">
+      <div class="col-md-6 grid-margin stretch-card">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">ADD COUPON</h4>
+            <p class="card-description">
+              Add a new Coupon
+            </p>
+            <div class="col-12">
+              <label for="inputNanme4" class="form-label">Code</label>
+              <input type="text" class="form-control" name="code"required>
+            </div>
+            <div class="col-12">
+              <label for="fordescription" class="form-label">maxDiscount</label>
+              <input min="1" inputmode="numeric" type="number" class="form-control"  name="maxDiscount" required>
+            </div>
+            <div class="col-12">
+              <label for="inputNanme4" class="form-label">Expiry date</label>
+              <input type="date" class="form-control" name="expiryDate"required>
+            </div>
+
+            <div class="col-12">
+              <label for="inputNanme4" class="form-label">minPurchaseAmount</label>
+              <input min="1" inputmode="numeric" type="number" class="form-control" name="minAmount"required>
+            </div>
+            <div class="col-12">
+              <label for="inputNanme4" class="form-label">Percentage</label>
+              <input min="1" inputmode="numeric" type="number" class="form-control" name="percentage"required>
+            </div>
+          
+
+            <% if(typeof message !== 'undefined'){ %>
+            <p style="color: brown;"><%- message %> </p>
+            <% } %>
+            <div class="text-center mt-2">
+              <button type="submit" class="btn btn-success" style="float:right;   padding-inline: 50px;"> submit</button>
+            </div>
+          </div>
+        </div>
+      </form>
+      </div>
+
+<%- include('../layouts/footer.ejs') %>

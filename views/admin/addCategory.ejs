@@ -1,0 +1,39 @@
+<%- include('../layouts/header.ejs') %>
+<%- include('../layouts/navbar.ejs') %>
+<%- include('../layouts/sidebar.ejs') %>
+
+<div class="main-panel">        
+  <div class="content-wrapper">
+  
+    <div class="row">
+      <div class="col-md-6 grid-margin stretch-card">
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">ADD CATEGORY</h4>
+            <p class="card-description">
+              Add a new category
+            </p>
+            <%
+
+            if(typeof message !== 'undefined') {
+              %>
+                <p class="alert alert-danger mt-5"><%= message %></p>
+              <%
+            }
+            %>
+            <form class="forms-sample" action="" method="post">
+              <div class="form-group">
+                <label for="category">Category</label>
+                <input type="text" class="form-control" id="category" name="category" placeholder="Category">
+              </div>
+              <div class="form-group">
+                <label for="description">Description</label>
+                <input type="text" class="form-control" id="description" name="description" placeholder="description">
+              </div>
+              <button type="submit" class="btn btn-primary mr-2">Submit</button>
+              <!-- <button class="btn btn-light">Cancel</button> -->
+            </form>
+          </div>
+        </div>
+      </div>
+<%- include('../layouts/footer.ejs') %>

@@ -1,0 +1,254 @@
+<%- include ('../layouts/user/header.ejs') %>
+<%- include ('../layouts/user/navbar.ejs') %>
+
+
+<section class="" style="background-color: #eee; padding-top: 50px; ">
+  <form action="" id="checkout-form ">
+    <div class="container py-5 ">
+      <div class="row d-flex justify-content-center  br-10  ">
+        <div class="col ">
+          <div class="card  " style="border-radius: 10px;">
+            <div class="card-body   ">
+              <div class="row ">
+
+
+                <div class="col-lg-12">
+                  <h5 class="mb-3"><a href="/allProducts" class="text-body"><i class="fas fa-long-arrow-alt-left me-2"></i>Continue shopping</a></h5>
+                  <hr>
+                  <% order.product.forEach((x)=>{ %>
+
+                  <div class="card shadow-0 border mb-1">
+
+                    <div class="card-body">
+                      <div class="row">
+                        <div class="col-md-2">
+                          <img style="height: 100px;width: 100px;" src="/productImages/<%=x.productId.image[0]%>" class="img-fluid" alt="Phone">
+                        </div>
+                        <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                          <p class="text-muted mb-0"><%=x.productId.name  %></p>
+                        </div>
+                        <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                          <p class="text-muted mb-0 small">Qty:<%=x.quantity%></p>
+                        </div>
+                        <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                          <p class="text-muted mb-0 small"><%=x.singlePrice  %></p>
+                        </div>
+                        <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                          <p class="text-muted mb-0 small"><%=x.singlePrice  %>x<%=x.quantity%></p>
+                        </div>
+                        <div class="col-md-2 text-center d-flex justify-content-center align-items-center">
+                          <p class="text-muted mb-0 small"><%=x.singleTotal  %></p>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                  <% }) %>
+                  <hr class="mb-3" style="background-color:  rgb(173, 173, 173) ; opacity: 1;">
+
+                  <div class="d-flex justify-content-between pt-2 mr-3">
+                    <p class="fw-bold mb-1" style="font-weight:900;">Order Details</p>
+                  </div>
+                  <div class="d-flex justify-content-between">
+                    <p class="text mb-0">Name : <%=user.name%></p>
+                  </div>
+
+                  <div class="d-flex justify-content-between">
+                    <p class="text mb-0">Invoice Date : <%= order.date.toLocaleString('en-us', { day: '2-digit', month: '2-digit', year: '2-digit' })%></p>
+                  </div>
+                  <div class="d-flex justify-content-between">
+                    <p class="text mb-0">Payment type : <%=order.paymentType %></p>
+                  </div>
+                  <div class="d-flex justify-content-between ">
+                    <p class="text mb-0">Invoice Number : <%= order.orderId %></p>
+                    <% if( order.discount !== null  ){ %>
+                    <p class="text-muted mb-0">Applied coupon :<%=order.coupon %></p>
+                    <% } %>
+                  </div>
+
+                  <div class="d-flex justify-content-between ">
+                    <p class="text mb-4">Delivery Address : <%= order.deliveryAddress%></p>
+                    <% if( order.discount !== null ){ %>
+                    <p class="text-success mb-0"><span class="fw-bold text-success me-4">You saved : </span>₹<%=order.discount %> </p>
+                    <% } %>
+                  </div>
+
+                  <div class="card-footer border  -0 px-4 d-flex justify-content-between " style="background-color: #1e1e1e; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
+                    <a href="/allProducts" class="btn btn-outline-warning ">Continue shopping
+                    </a>
+                    <h6 class="d-flex align-items-center justify-content-end text-white text-uppercase mb-0  "><span class="h6  mb-0">Total
+                        amount : <%= order.total %></span></h6>
+                  </div>
+
+
+                </div>
+
+
+
+
+              </div>
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  </form>
+</section>
+
+
+
+
+
+<script>
+  $('#checkout-form').submit((x) => {
+    console.log('coming ');
+    x.preventDefault()
+    $.ajax({
+      url: '/placeOreder',
+      method: "post",
+      data: $('#checkout-form').serialize(),
+      success: (response) => {
+
+        if (response.success) {
+          location.href = '/ordersuccess'
+        }
+      }
+    })
+  })
+</script>
+
+
+
+
+<script>
+  //modal Add address
+  const form = document.querySelector('#myForm')
+  $('#myForm').submit(function(e) {
+    e.preventDefault()
+    let formData = $(this).serialize()
+    const inputs = document.querySelectorAll('#myForm input')
+    let inputField = false
+    for (let i = 0; i < inputs.length; i++) {
+      if (inputs[i].value.trim() == '') {
+        inputField = true
+        $('#alertfield').attr({
+          style: 'display:block'
+        }).html('All fields Required')
+        setTimeout(() => {
+          $('#alertfield').hide()
+        }, 3000)
+        break; // stop the loop if any input is empty
+      }
+    }
+    if (!inputField) {
+      $.ajax({
+        url: '/checkoutAddAddress',
+        data: formData,
+        method: 'post',
+        success: (Response) => {
+          // handle the response from the server
+          console.log(Response);
+          if (Response) {
+
+            $('#exampleModalCenter').on('hidden.bs.modal', function() {
+
+              // $(this).find('form').trigger('reset');
+            });
+            $('#exampleModalCenter').modal('hide');
+            $('#aiswaryam').load('/checkout #aiswaryam')
+          }
+        }
+      })
+    }
+  })
+
+
+
+
+  //main form submit for success
+  $('#mainForm').submit(function(e) {
+    e.preventDefault();
+    var formData = $(this).serialize();
+    $.ajax({
+      url: '/checkout', // replace with the URL of your server-side script
+      method: 'POST', // use POST method
+      data: formData,
+      success: (response) => {
+        // handle the response from the server
+        console.log("yes")
+        console.log(response);
+        if (response.status) {
+          location.href = '/success'
+        } else if (response.radio) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Select Payment Method.',
+          })
+        } else if (response.viewRazorpay) {
+          razorpayPayment(response.order)
+
+        }
+      },
+
+    });
+  });
+
+
+  function razorpayPayment(order) {
+    var options = {
+      "key": "rzp_test_J8ft2g2cBjOM7u", // Enter the Key ID generated from the Dashboard
+      "amount": order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+      "currency": "INR",
+      "name": "ShoeCart", //your business name
+      "description": "Test Transaction",
+      "image": "https://example.com/your_logo",
+      "order_id": order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+      "handler": function(response) {
+
+        verifyPayment(response, order)
+
+      },
+      "prefill": {
+        "name": "Adhil Bin Ashraf", //your customer's name
+        "email": "adhilbinashraf3000@example.com",
+        "contact": "9000090000"
+      },
+      "notes": {
+        "address": "Razorpay Corporate Office"
+      },
+      "theme": {
+        "color": "#3399cc"
+      }
+    };
+
+    var rzp1 = new Razorpay(options);
+    rzp1.open();
+
+  }
+
+  function verifyPayment(payment, order) {
+    $.ajax({
+      url: '/verify-payment',
+      data: {
+        payment,
+        order
+      },
+      method: "post",
+      success: (response) => {
+        // handle the response from the server
+        console.log("yes")
+        console.log(response);
+        if (response.status) {
+          location.href = '/success'
+        }
+      }
+    })
+
+  }
+</script>
+
+<%- include ('../layouts/user/footer.ejs') %>
