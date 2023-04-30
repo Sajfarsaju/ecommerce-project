@@ -121,10 +121,10 @@ const updateProduct = async(req,res)=>{
         for(file of req.files){
           productData.image.push(file.filename)
       }
-      console.log(productData.image)
+      // console.log(productData.image)
       
       }
-      console.log("hwhwdhd");
+      // console.log("hwhwdhd");
       
           
           await product.updateOne({_id:id},{$set:{
@@ -149,7 +149,7 @@ const deleteImage = async (req, res) => {
  try {
       const productId = req.query.productId;
       const index = req.query.index;
-      console.log(index+"ccccccccccccccccc"+productId);
+      // console.log(index+"ccccccccccccccccc"+productId);
       const deletedImage = await product.updateOne(
         { _id: productId },
         { $unset: { [`image.${index}`]: "" } }
@@ -159,7 +159,7 @@ const deleteImage = async (req, res) => {
         { $pull: { image: null } }
       );
   
-      console.log(deletedImage);
+      // console.log(deletedImage);
       res.redirect("/admin/editProduct?id=" + productId);
     } catch (error) {
       console.log(error);

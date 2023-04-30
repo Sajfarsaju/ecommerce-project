@@ -1,6 +1,6 @@
 // TO CONNECT DATABASE //
 const mongoose = require('mongoose');
-mongoose.connect(`mongodb://127.0.0.1:27017/myProject`);
+mongoose.connect(`mongodb+srv://sajfarmmuhammad:458457900@cluster0.exkaeqq.mongodb.net/myProject`);
 
 const express = require('express');
 const app = express();
