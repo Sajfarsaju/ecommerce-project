@@ -55,6 +55,9 @@ const orderSchema = mongoose.Schema({
   status:{
     type:String,
     default:'pending'
+  },
+  returnReason: {
+    type: String
   }
 })
 

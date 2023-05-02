@@ -309,7 +309,14 @@
                     </td>
                     <input type="hidden" value="<%=x.product.stock%>" class="<%=x.product._id%>">
                     <td>
+                                             
+                        
+                     
+                       
                       <h5>₹<%= x.product.price %></h5>
+                  
+
+
                     </td>
                     <td class="column-4 p-l-30">
                     <div class="wrap-num-product flex-w m-l-auto m-r-0 ">
@@ -319,13 +326,16 @@
                         </button>
                       </div> -->
                       <div class="btn-num-product-down cl4 hov-btn3 trans-04 flex-c-m">
+                      
                         <button type="button" class="btn-num-product cl8 hov-btn3 trans-04 flex-c-m" onclick="adjustQuantity('<%=x.product._id%>', -1, '<%=x.product.price%>')">
+                          
+                          
                           <i class="fas fa-minus"></i>
                         </button>
                       </div>
                       
 
-                      <div class="mtext-104 cl3 txt-center num-product p-t-9" type="number" name="num-product1"><span id="<%=x.product._id%>" class="p-t-9" style="margin-top: 30px;"><%=x.quantity%></span></div>
+                      <div class="mtext-104 cl3 txt-center num-product p-t-9" type="number" name="num-product1"><span id="<%=x.product._id%>" class="p-t-9" min="1" max="10" style="margin-top: 30px;"><%=x.quantity%></span></div>
 
                       <!-- <div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m">
                         <button type="button" class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m" onclick="adjustQuantity('<%=x.product._id%>',1,'<%=x.product.price%>')">
@@ -333,7 +343,10 @@
                         </button>
                       </div> -->
                       <div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m">
+                      
                         <button type="button" class="btn-num-product cl8 hov-btn3 trans-04 flex-c-m" onclick="adjustQuantity('<%=x.product._id%>', 1, '<%=x.product.price%>')">
+                         
+                          
                           <i class="fas fa-plus"></i>
                         </button>
                       </div>
@@ -341,7 +354,10 @@
                     </div>
                   </td>
                     <td>
+                    
+
                       <h5 class="<%=x.product._id%> " >₹<%= x.productTotalPrice %></h5>
+                      
                     </td>
                     <td onclick="deleteCart('<%=x.product._id%>')" width="10%" class="text-center"><a href="#" class="trash-icon"><i class="far fa-trash-alt"></i></a></td>
                   </tr>
@@ -375,7 +391,7 @@
                   <td></td>
                   <td>
                     <div class="checkout_btn_inner">
-                      <a class="gray_btn" href="#">Continue Shopping</a>
+                      <a class="gray_btn" href="/allProducts">Continue Shopping</a>
                       <a class="main_btn" href="/loadCheckout">Proceed to checkout</a>
                     </div>
                   </td>

@@ -1,13 +1,23 @@
 const product = require('../models/productModel');
+
 const Category = require('../models/categoryModel');
+
 const User = require('../models/userModel');
+
 const categoryModel = require('../models/categoryModel');
 
+const sharp = require('sharp');
+
+const fs = require('fs')
+
+const path = require('path')
+
+///////// ALL PRODUCTS ///////////////////
 const showProduct = async(req,res,next)=> {
   try {
     if(req.session.admin_id){
       const productId = await product.find().populate('category')
-      console.log(productId);
+      
       const categoryData = await Category.find()
       res.render('products',{ product:productId, category:categoryData })
     }
@@ -15,7 +25,10 @@ const showProduct = async(req,res,next)=> {
     next(error.message)
   }
 }
+/////////////////////////////////////////
 
+
+///////////// LOAD ADD PRODUCT /////////////
 const newProduct = async(req,res,next)=> {
   try {
     if(req.session.admin_id){
@@ -26,42 +39,52 @@ const newProduct = async(req,res,next)=> {
     next(error.message)
   }
 }
+/////////////////////////////////////////
 
-// const addProduct = async(req,res,next)=>{
-//   try {
-//     const newProductData = new product({
-//       name:req.body.name,
-//       image:req.body.image,
-//       category:req.body.category,
-//       description:req.body.description,
-//       stock:req.body.stock,
-//       price:req.body.price
-//     })
 
-//     const productSaved = await newProductData.save()
-//     if(productSaved){
-//       const productId = await product.find()
-//       res.redirect('/admin/products')
-//     }
-//     else{
-//       res.render('addProducts', { message: 'operation failed' })
-//     }
-//   } catch (error) {
-//     next(error.message)
-//   }
-// }
-
+//////////// ADD NEW PRODUCT //////////////
 const addProduct = async(req,res,next)=> {
   try {
-    const imagearray = [];
-        for(file of req.files){
-            imagearray.push(file.filename)
+    let imageId = [];
+
+        const cropWidth = 1100;
+        const cropHeight = 1467;
+
+        for (let i = 0; i < req.files.length; i++) {
+            const imagePath = path.join(__dirname, '../public/productImages', req.files[i].filename);
+            const croppedImagePath = path.join(__dirname, '../public/productImages', 'cropped_' + req.files[i].filename);
+
+            // Load the image using sharp
+            const image = sharp(imagePath);
+
+            // Convert the image to JPEG format with higher quality
+            await image
+                .jpeg({ quality: 90 })
+                .resize(cropWidth, cropHeight, { fit: 'cover' })
+                .toFile(croppedImagePath);
+
+            // Add the cropped image to the imageId array
+            imageId.push('cropped_' + req.files[i].filename);
+
+            try {
+                // Change the file permissions to allow deletion
+                fs.chmodSync(imagePath, 0o777);
+
+                // Delete the original WebP file
+                fs.unlinkSync(imagePath);
+            } catch (err) {
+                console.log(err);
+            }
         }
+    // const imagearray = [];
+    //     for(file of req.files){
+    //         imagearray.push(file.filename)
+    //     }
         const Product = new product({
             name:req.body.name,
             price:req.body.price,
             description:req.body.description,
-            image:imagearray,
+            image:imageId,
             category:req.body.category,
             stock:req.body.stock,
         })
@@ -75,8 +98,10 @@ const addProduct = async(req,res,next)=> {
     console.log(error.message);
   }
 }
+/////////////////////////////////////////////////////////
 
 
+///////////// DELETE PRODUCT /////////////////////////////
 const deleteProduct = async(req,res,next)=> {
   try {
     if(req.session.admin_id){
@@ -89,12 +114,15 @@ const deleteProduct = async(req,res,next)=> {
     next(error.message)
   }
 }
+/////////////////////////////////////////////////////
 
+
+//////////////// EDIT PRODUCT ////////////////////
 const editProduct = async(req,res,next)=> {
   try {
     if(req.session.admin_id){
       const id = req.query.id;
-      console.log(id)
+      
       const categories = await Category.find()
       const productId = await product.findOne({_id:id}).populate('category')
      
@@ -107,7 +135,10 @@ const editProduct = async(req,res,next)=> {
     next(error.message)
   }
 }
+//////////////////////////////////////////////////
 
+
+//////////////// EDIT & UPDATE PRODUCT ///////////////////
 const updateProduct = async(req,res)=>{
   const id = req.query.id
           const productData = await product.findOne({_id:id}).populate("category")
@@ -121,10 +152,10 @@ const updateProduct = async(req,res)=>{
         for(file of req.files){
           productData.image.push(file.filename)
       }
-      // console.log(productData.image)
+      
       
       }
-      // console.log("hwhwdhd");
+      
       
           
           await product.updateOne({_id:id},{$set:{
@@ -144,12 +175,15 @@ const updateProduct = async(req,res)=>{
   }
 }
 }
+//////////////////////////////////////////////////
 
+
+////////////// DELETE IMAGES ////////////////////////
 const deleteImage = async (req, res) => {
  try {
       const productId = req.query.productId;
       const index = req.query.index;
-      // console.log(index+"ccccccccccccccccc"+productId);
+      
       const deletedImage = await product.updateOne(
         { _id: productId },
         { $unset: { [`image.${index}`]: "" } }
@@ -159,14 +193,16 @@ const deleteImage = async (req, res) => {
         { $pull: { image: null } }
       );
   
-      // console.log(deletedImage);
+      
       res.redirect("/admin/editProduct?id=" + productId);
     } catch (error) {
       console.log(error);
     }
   };
+////////////////////////////////////////////
 
 
+///////// PRODUCT BLOCK & UNBLOCK /////////////////
 const productControl = async (req, res) => {
   try {
       const id = req.query.id
@@ -187,7 +223,10 @@ const productControl = async (req, res) => {
       console.log(error.message);
   }
 }
+//////////////////////////////////////////////////
 
+
+/////////////// PRODUCT DETAILS VIEW /////////////////////
 const productDetails = async(req,res,next)=> {
     
     const user = req.session.user_id;
@@ -215,8 +254,10 @@ const productDetails = async(req,res,next)=> {
     next(error.message)
   }
 }
+/////////////////////////////////////////////////////////
 
 
+/////////////// LOAD PRODUCT OFFERS //////////////////
 const productOfferManagement=async(req,res,next)=>{
   try {
       const offer=await product.find()
@@ -226,42 +267,55 @@ res.render('productManagement',{offer})
     next(error.message)
   }
 }
+//////////////////////////////////////////////////
 
+
+///////////// LOAD EDIT PRODUCT OFFER ////////////
 const productOfferEdit=async(req,res,next)=>{
   try {
-      const offers=await product.findOne({_id:new ObjectId(req.params.id)})
+      const offers=await product.findOne({_id:req.params.id})
      
       
-      res.render('admin/editProductManage',{offers})
+      res.render('editProductManage',{offers})
   } catch (error) {
     next(error.message)
   }
 }
+/////////////////////////////////////////////
 
+/////////////// PRODUCT OFFER EDIT AFTER UPDATE ////////
 const productOfferEditPost=async(req,res,next)=>{
   try {
       
-      const products = await product.findOne({_id:new ObjectId(req.params.id)})
+      const products = await product.findOne({_id:req.params.id})
       const price = products?.originalPrice ?? products.price
-      const disPer = Math.round((parseFloat(req.body.discountPrice)/price) * 100)
+      console.log(req.body.discount+"1");
+      
+      const disPer = Math.round((parseFloat(req.body.discount)/100) * price)
+      console.log(req.body.discount+"2");
+      console.log(disPer+"3");
       let originalPrice=products?.originalPrice
       if(!originalPrice){
 
           originalPrice= products.price
       }
-      const disPrice=(originalPrice - parseFloat(req.body.discountPrice)).toFixed(2)
-      await product.updateOne({_id:new ObjectId(req.params.id)},{$set:{price:disPrice,originalPrice:originalPrice,discountPrice:req.body.discountPrice,discount:disPer}}) 
+      const disPrice=(originalPrice - parseFloat(req.body.discount)).toFixed(2)
+      console.log(disPrice);
+      await product.updateOne({_id:req.params.id},{$set:{price:disPrice,originalPrice:originalPrice,discountPrice:req.body.discountPrice,discount:disPer}}) 
       res.redirect('/admin/productOffer')
   } catch (error) {
     next(error.message)
   }
 }
+///////////////////////////////////////////////////
 
+
+//////////////// PRODUCT OFFE BLOCK & UNBLOCK ////////
 const productOfferDelete=async(req,res,next)=>{
   try {
       const id=req.query.id;
       const status=await product.findById({_id:id})
-      if(status.offerStatus==true){
+      if(status.offerStatus===true){
          const stat=await product.findByIdAndUpdate({_id:id},{$set:{offerStatus:false}})
          res.redirect('/admin/productOffer')
       }else{
@@ -271,9 +325,10 @@ const productOfferDelete=async(req,res,next)=>{
     next(error.message)
   }
 }
+///////////////////////////////////////////////////
 
 
-
+////////////////// LOAD CATEGORY OFFER //////////////////
 const categoryOfferManagement=async(req,res,next)=>{
  try {
     const offers=await Category.find()
@@ -284,41 +339,57 @@ const categoryOfferManagement=async(req,res,next)=>{
   next(error.message)
  }
 }
+/////////////////////////////////////////////////////
 
 
+/////////////// LOAD EDIT CATEGORY OFFER ////////////////
 const catOfferEdit=async(req,res,next)=>{
   try {
-    const offers=await Category.findOne({_id:new ObjectId(req.params.id)})
-    console.log(offers)
+    
+    const offers=await Category.findOne({_id:req.params.id})
+    
         
-     res.render('admin/catOfferEdit',{offers})
+     res.render('catOfferEdit',{offers})
   } catch (error) {
     next(error.message)
   }
 }
+////////////////////////////////////////////////////
 
+
+
+////////// UPDATE CATEGORY OFFER AFTER EDIT ////////////////////
 const catOfferEditPost = async(req,res,next)=>{
   try {
-      const categories=await Category.findOne({_id:new ObjectId(req.params.id)})
-      await category.updateOne({_id:new ObjectId(req.params.id)},{$set:{discount:req.body.discount}})
-      const products=await product.find({category:req.body.category})
+   
+      const categories=await Category.findOne({_id:req.params.id})
+      
+      await Category.updateOne({_id:req.params.id},{$set:{discount:req.body.discount}})
+      const products=await product.find({category:req.params.id})
+      
+      
       products.forEach(async (data)=>{
           const productId=data._id
-          const price=data.price - (data.price*req.body.discount/100)
-          await product.updateOne({_id:productId},{$set:{price:price}})
+          
+          const price=data.price - (data.price*(req.body.discount/100))
+          
+          await product.updateOne({_id:productId},{$set:{discountPrice:price}})
       })
       res.redirect('/admin/categoryOffer')
   } catch (error) {
     next(error.message)
   }
 }
+//////////////////////////////////////////////////////
 
+
+///////////////// CATEGORY OFFER BLOCK & UNBLOCK
 const catOfferDelete=async(req,res,next)=>{
   try {
       const id=req.query.id;
-      console.log(id)
-      const status=await category.findById({_id:id})
-      if(status.offerStatus==true){
+      
+      const status=await Category.findById({_id:id})
+      if(status.offerStatus===true){
           const stat=await Category.findByIdAndUpdate({_id:id},{$set:{offerStatus:false}})
           res.redirect('/admin/categoryOffer')
       }else{
@@ -329,6 +400,7 @@ const catOfferDelete=async(req,res,next)=>{
     next(error.message)
   }
 }
+/////////////////////////////////////////////////////////////////
 
 
 module.exports = {

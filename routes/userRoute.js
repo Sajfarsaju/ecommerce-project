@@ -1,27 +1,32 @@
 const express = require('express');
+
 const mongoose = require('mongoose');
+
 const user_route = express()
 
 const session = require('express-session');
 
 const auth = require('../middleware/auth');
 
-user_route.set('view engine','ejs');
+// user_route.set('view engine','ejs');
 user_route.set('views','./views/user');
 
 const userController =require("../controllers/userController");
+
 const productController = require('../controllers/productController');
+
 const { isLogin } = require('../middleware/adminAuth');
+
 const config = require('../config/config');
 
-user_route.use(session({
-  secret:config.sessionSecret,
-  saveUninitialized: true,
-  resave: false
-}));
+// user_route.use(session({
+//   secret:config.sessionSecret,
+//   saveUninitialized: true,
+//   resave: false
+// }));
 
-user_route.use(express.json());
-user_route.use(express.urlencoded({extended:true}));
+// user_route.use(express.json());
+// user_route.use(express.urlencoded({extended:true}));
 
 /////////////////// USER LOGIN ROUTES ////////////////////////
 user_route.get('/login',auth.isLogout,userController.loadLogin);
@@ -79,6 +84,7 @@ user_route.post('/placeOreder',auth.isLogin,userController.loadOrderSuccess);
 user_route.get('/ordersuccess',auth.isLogin,userController.orderSuccess);
 user_route.post('/verifPpayment',auth.isLogin,userController.verifPpayment);
 
+
 /////////////////// ORDER ROUTES ///////////////////////////////////
 user_route.get('/vieworders',auth.isLogin,userController.viewOrders);
 user_route.get('/orderDetails/:id',auth.isLogin,userController.orderDetails);
@@ -86,15 +92,19 @@ user_route.post('/cancellOrder',auth.isLogin,userController.cancelOrder);
 user_route.post('/returnOrder',auth.isLogin,userController.returnOrder);
 // user_route.post('/submit-return',userController.submitReturn);
 
+user_route.get('/returnSubmit',auth.isLogin,userController.returnFormLoad);
+user_route.post('/returnSubmit',auth.isLogin,userController.returnFormPost);
+
 /////////////////// PRICE FILTER ROUTES /////////////////////
 user_route.get('/price',auth.isLogout,userController.price);
 user_route.get('/priceLow',auth.isLogout,userController.priceLow);
 user_route.get('/category/:id',userController.categoryFilter);
 
+
 /////////////////// SEARCH ROUTES //////////////////////////////
 user_route.get('/search',auth.isLogout,userController.allProducts);
 user_route.post('/search',auth.isLogout,userController.search);
-user_route.post('/shopFilter',userController.productFilter)
+user_route.post('/shopFilter',auth.isLogout,userController.productFilter)
 
 // user_route.get('/404',userController.load404)
 

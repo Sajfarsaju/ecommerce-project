@@ -122,57 +122,6 @@ const verifyLogin = async (req, res, next) => {
 /////////////////////////END/////////////////////////////////
 
 
-// const verifyLogin = async (req, res, next) => {
-//   try {
-//     const email = req.body.email;
-//     const password = req.body.password;
-//     if (req.body.email.trim() == "" || req.body.password.trim() == "") {
-//       res.render("login", { message: "field cant be empty" });
-//     } else {
-//       const userCheck = await User.findOne({ email: email });
-//       if (userCheck) {
-//         if (userCheck.status == false) {
-//           // if status is true, deny login and redirect to login page with error message
-//           res.render("login", { message: "Your account is blocked. Please contact support." });
-//         } else if (password == userCheck.password) {
-//           req.session.user_id = userCheck;
-//           res.redirect("/");
-//         } else {
-//           res.render("login", { message: "Invalid email or password" });
-//         }
-//       } else {
-//         res.render("login", { message: "Invalid email or password" });
-//       }
-//     }
-//   } catch (error) {
-//     next(error.message);
-//   }
-// };
-
-
-// const verifyLogin = async (req, res, next) => {
-//   try {
-//     const email = req.body.email;
-//     const password = req.body.password;
-//     if (req.body.email.trim() == "" || req.body.password.trim() == "") {
-
-//       res.render("login", { message: "field cant be empty" });
-//     } else {
-
-//       const userCheck = await User.findOne({ email: email });
-//       if (userCheck) {
-
-//         req.session.user_id = userCheck;
-//         if (password == userCheck.password) {
-//           res.redirect("/");
-//         }
-//       }
-//     }
-//   } catch (error) {
-//     next(error.message);
-//   }
-// };
-
 ////////////// USER INSERT ///////////////////
 const insertUser = async (req, res, next) => {
   const mobile = req.body.mno
@@ -196,7 +145,7 @@ const insertUser = async (req, res, next) => {
 // 9i93
     // if email, mobile, and username are all unique, proceed with OTP verification
     const verifiedResponse = await client.verify.v2
-      .services("VA14375573653861dacdafeb3a2714cb51")
+      .services("process.env.TWILIO_SERVICE_SID")
       .verifications.create({
         to: `+91${mobile}`,
         channel: `sms`,
@@ -210,21 +159,6 @@ const insertUser = async (req, res, next) => {
 /////////////////////////END/////////////////////////////////
 
 
-// const insertUser = async (req, res, next) => {
-//   req.session.userData = req.body;
-//   mobile = req.body.mno;
-//   try {
-//     const verifiedResponse = await client.verify.v2
-//       .services("VAece0858150921ab8f186d5507bf982f7")
-//       .verifications.create({
-//         to: `+91${mobile}`,
-//         channel: `sms`,
-//       });
-//     res.render("otp");
-//   } catch (error) {
-//     next(error.message);
-//   }
-// };
 
 ////////////// VERIFY OTP ///////////////////
 const otpVerify = async (req, res, next) => {
@@ -232,7 +166,7 @@ const otpVerify = async (req, res, next) => {
   try {
     const info = req.session.userData;
     const verifiedResponse = await client.verify.v2
-      .services("VA14375573653861dacdafeb3a2714cb51")
+      .services("process.env.TWILIO_SERVICE_SID")
       .verificationChecks.create({
         to: `+91${info.mno}`,
         code: otp,
@@ -275,7 +209,7 @@ const resetPassword = async(req,res,next)=>{
 ////////////// SEND RESET PASS ///////////////////
 const   sendReset = async (req, res) => {
   try {
-    console.log(req.body);
+   
     if (!req.body.mno) {
       throw new Error("Mobile number is not defined");
     }
@@ -283,13 +217,13 @@ const   sendReset = async (req, res) => {
     const existingNumber = await User.findOne({ mobile: req.body.mno });
 
     if (existingNumber) {
-      console.log("ok");
+      
       req.session.phone = req.body.mno;
 
       res.render("changePassword");
       client.verify.v2
       // change service id
-        .services("VAece0858150921ab8f186d5507bf982f7")
+        .services("process.env.TWILIO_SERVICE_SID")
         .verifications.create({ to: `+91${req.body.mno}`, channel: "sms" })
         .then((verification) => {
           console.log(req.body.mno);
@@ -298,7 +232,7 @@ const   sendReset = async (req, res) => {
           console.log(err);
         });
     } else {
-      console.log("ji");
+      
       res.render("resetPassword", { msg: "This Number is Not Registered" });
     }
   } catch (error) {
@@ -318,7 +252,7 @@ const verifyReset = async (req, res) => {
   try {
     const verification_check = await client.verify.v2
     // change service id
-      .services("VAece0858150921ab8f186d5507bf982f7")
+      .services("process.env.TWILIO_SERVICE_SID")
       .verificationChecks.create({ to: `+91${phone}`, code: otp });
 
     if (verification_check.status === "approved") {
@@ -344,38 +278,6 @@ const verifyReset = async (req, res) => {
 ////////////////////////////////////END////////////////////////////////////
 
 
-
-
-// const otpVerify = async (req, res, next) => {
-//   const otp = req.body.otp;
-//   try {
-//     const info = req.session.userData;
-//     const verifiedResponse = await client.verify.v2
-//       .services("VAece0858150921ab8f186d5507bf982f7")
-//       .verificationChecks.create({
-//         to: `+91${info.mno}`,
-//         code: otp,
-//       });
-//     if (verifiedResponse.status === "approved") {
-//       const newUserData = new User({
-//         name: info.name,
-//         email: info.email,
-//         mobile: info.mno,
-//         password: info.password,
-//       });
-//       const userData = await newUserData.save();
-//       const user = await User.findOne({ name: info.name });
-//       if (userData) {
-//         req.session.user_id = user;
-//         res.redirect("/");
-//       } else {
-//         res.render("otp", { message: "Entered Otp is Incorrect" });
-//       }
-//     }
-//   } catch (error) {
-//     next(error.message);
-//   }
-// };
 
 
 ////////////// ALL PRODUCTS ///////////////////
@@ -771,7 +673,7 @@ const adjustQuantity = async(req,res,next)=> {
     const proId = req.body.productId;
     const QuantityCount = req.body.QuantityCount;
     const proPrice = req.body.proPrice;
-
+    
     const productData = await product.findOne({_id:proId,status:true})
     const stock = productData.stock;
 
@@ -781,6 +683,7 @@ const adjustQuantity = async(req,res,next)=> {
     const prodSinglePrice = proPrice * qty
 
     await User.updateOne({_id:user._id,'cart.product':proId},{$set:{'cart.$.productTotalPrice': prodSinglePrice}})
+    
     const cart = await User.findOne({_id:user._id})
 
     let sum = 0
@@ -850,7 +753,7 @@ const viewAddress = async(req,res,next)=>{
     const user = req.session.user_id;
     const categoryData = await category.find({status:true})
     const userData = await User.findOne({_id:user._id})
-    console.log(userData);
+    
     res.render('viewAddress',{user:userData,category:categoryData})
 
   } catch (error) {
@@ -958,7 +861,7 @@ const updateAddress = async(req,res,next)=> {
         }
       })
 
-      console.log(data);
+      
 
       res.redirect('/viewAddress')
 
@@ -1109,16 +1012,30 @@ const loadCheckout = async(req,res,next)=> {
     if(req.session.user_id) {
 
       const user = req.session.user_id;
+      
       const userData = await User.findOne({_id:user._id}).populate('cart.product');
       const productData = await product.find({status:true}).populate('category');
+      
       const categoryData = await category.find({});
       const couponData = await coupon.find({$nor:[{userUsed: user._id}]})
 
       if(userData.cart[0] == null){
+
         res.render('cart', { user: userData, category: categoryData, Product : productData, Coupon:coupon})
       }
       else{
-        res.render('checkout',{user: userData, category: categoryData, Coupon:couponData})
+        let discountAmount;
+        let sum = 0;
+        userData.cart.forEach((product) => {
+          discountAmount = product.product.price - product.product.discountPrice;
+          console.log(`Discount amount for ${product.product.name}: ${discountAmount}`);
+          sum += discountAmount
+          // You can do further processing with the discount amount here
+        });
+        
+        console.log('Total discount amount:', sum);        
+
+        res.render('checkout',{user: userData, discountAmt : sum , product : productData , category: categoryData, Coupon:couponData})
       }
     } 
     else{
@@ -1138,7 +1055,7 @@ const loadOrderSuccess = async(req,res,next)=>{
     
     const user = req.session.user_id;
 
-    const userData = await User.findOne({_id: user._id})
+    const userData = await User.findOne({_id: user._id}).populate('cart.product')
     const categoryData = await category.find({})
 
     const product = []
@@ -1201,7 +1118,7 @@ const loadOrderSuccess = async(req,res,next)=>{
         const couponData = await coupon.updateOne({code: req.body.code},
           {$push:{userUsed: req.body.userId}})
 
-        res.json({success:true})
+        res.json({success:true , user : userData})
 
       }
     } 
@@ -1248,7 +1165,7 @@ const loadOrderSuccess = async(req,res,next)=>{
 
       if (req.body.total > data.wallet) {
 
-          res.json({ inSufficient: true })
+          res.json({ inSufficient: true , user : userData})
       } else {
 
           const total = req.body.total - req.body.discount1
@@ -1283,7 +1200,7 @@ const loadOrderSuccess = async(req,res,next)=>{
                   { $push: { userUsed: req.body.userId } })
 
               const wallet = await User.updateOne({ _id: user._id }, { $inc: { wallet: -req.body.total } })
-              res.json({ success: true })
+              res.json({ success: true , user : userData})
 
           }
       }
@@ -1302,7 +1219,7 @@ const verifPpayment = async(req,res,next)=> {
     
     const details = req.body
     let hmac = crypto.createHmac('sha256',process.env.YOUR_KEY_SECRET)
-    console.log(hmac);
+    
     hmac.update(
       details.payment.razorpay_order_id +
       "|" +
@@ -1310,22 +1227,8 @@ const verifPpayment = async(req,res,next)=> {
       
     );
     hmac = hmac.digest('hex');
-    console.log("out");
-    // 
-    // if(hmac == details.payment.razorpay_signature) {
-    //   console.log("in");
-    //   const latestOrder = await order.findOne({})
-    //   .sort({date:-1}).lean();
-    //   const change = await order.updateOne({_id:latestOrder._id},
-    //     {$set:{status:'confirmed'}})
-
-    //     res.json({status:true})
-    // }
-    // else {
-
-    //   res.json({failed:true})
-    // }
-    // 
+    
+   
     if (hmac == details.payment.razorpay_signature) {
       const latestOrder = await order.findOne({}).sort({ date: -1 }).lean();
       const change = await order.updateOne(
@@ -1356,23 +1259,23 @@ const orderSuccess = async(req,res,next)=> {
     .sort({date:-1})
     .populate('product.productId')
     .lean()
-    console.log("'okk11");
+    
     if(orderData.paymentType == 'ONLINE') {
       for(let i=0 ; i<orderData.product.length; i++) {
         const deleteCart = await User.updateOne({_id:user._id},
           {$pull:{cart:{product:{$in:orderData.product[i].productId}}},
         $set:{cartTotalPrice: 0 }
       })
-       console.log("ok2");
+       
       
         const productStock = await productModel.findById(orderData.product[i].productId)
         productStock.stock -= orderData.product[i].quantity
         await productStock.save()
   
-      console.log("ok33");
+     
       }
     }
-    console.log("OKKKKKKK");
+   
     res.render('orderSuccess',{user:userData,category:categoryData,order:orderData})
 
   } catch (error) {
@@ -1452,20 +1355,6 @@ const returnOrder = async(req,res,next)=> {
 }
 /////////////////////////END/////////////////////////////////
 
-// const submitReturn = async(req,res,next)=> {
-//   try {
-    
-//     const id = req.body.orderId;
-//     const status = 'Return requested'
-//     const Return = await order.updateOne({_id:id},
-//       {$set:{status:status}})
-
-//       res.json({success:true})
-
-//   } catch (error) {
-//     next(error.message)
-//   }
-// }
 
 
 ////////////// LOAD ORDERS DETAILS ///////////////////
@@ -1553,6 +1442,7 @@ const applyCoupon = async(req,res,next)=> {
 // }
 
 
+////////// PRODUCT FILTURE & SEARCH & PAGINATION WITH INTERCONNECTED///
 const productFilter = async (req, res) => {
   try {
     let producte;
@@ -1690,6 +1580,55 @@ const productFilter = async (req, res) => {
     console.log(error.message);
   }
 };
+///////////////////// END /////////////////////////////
+
+
+const returnFormLoad = async(req,res,next)=>{
+
+  try {
+    const id = req.query.id;
+    
+    const categoryData = await category.find({status:true})
+    const UserData = await User.findOne({})
+    const userData = await User.findOne({})
+    const orderData = await order.findOne({_id:id})
+   
+
+    res.render("returnForm",{ 
+      category: categoryData,
+     
+      order : orderData,
+     
+    })
+  } catch (error) {
+    console.log(error.message);
+    next(error.message)
+  }
+}
+
+const returnFormPost = async(req,res,next)=>{
+
+
+
+  try {
+
+    const id = req.query.id
+    console.log(id);
+    const buttonClickTime = req.body.button_click_time;
+    const returnReason = req.body.return_reason; // New field
+   
+    const userData = await User.findOne({})
+
+    const orderData = await order.updateOne({_id:id},{$set:{returnReason:req.body.return_reason}})
+   
+
+  
+    res.redirect("/vieworders")
+
+  }catch(error){
+    next(error.message);
+  }
+}
 
 module.exports = {
   loadSignup,
@@ -1733,7 +1672,9 @@ module.exports = {
   // submitReturn,
   viewOrders,
   applyCoupon,
-  productFilter
-  // load404
+  productFilter,
+  // load404,
+  returnFormLoad,
+  returnFormPost
 };
 

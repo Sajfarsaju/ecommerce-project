@@ -76,7 +76,7 @@ button[type="submit"] {
                 <div class="col-lg-4 col-md-6">
                   <div class="single-product">
                     <div class="product-img">
-                      <a href="/singleProduct?id=<%= x._id %>"><img class="card-img" src="/productImages/<%= x.image[0]%>" alt="<%= x.name %>" /></a>
+                      <img class="card-img" src="/productImages/<%= x.image[0]%>" alt="<%= x.name %>" />
                       <div class="p_icon">
 
                           <a href="/singleProduct?id=<%= x._id %>">
@@ -98,7 +98,13 @@ button[type="submit"] {
                         <a href="#" class="btn-addwish-b2 dis-block pos-relative " onclick="addToWishlist('<%= x._id %>')">
                             <i class="ti-heart"></i>
                           <!-- cart -->
-                            <a href="#" class="btn-addwish-b2 dis-block pos-relative " onclick="addToCart('<%=x._id%>','<%=x.price%>')">
+                         
+                            <a href="#" class="btn-addwish-b2 dis-block pos-relative" onclick="addToCart('<%=x._id%>', '<%=x.price%>')">
+                        
+                        
+                              
+
+
                               <i class="ti-shopping-cart"></i>
                             </a>
                         </a>
@@ -111,7 +117,11 @@ button[type="submit"] {
                         <h4><%= x.name %></h4>
                       </a>
                       <div class="mt-3">
-                        <span class="mr-4">₹<%=x.price%></span>
+                        <% if (x.discountPrice === x.price || x.discountPrice === 0) { %>
+                          <span class="mr-4">₹<%= x.price %></span>
+                          <% } else { %>
+                          <span class="mr-4">₹<%= Math.floor(x.discountPrice) %><s style="color: grey;">₹<%= x.price %></s></span>
+                          <% } %>
                       </div>
                     </div>
                   </div>

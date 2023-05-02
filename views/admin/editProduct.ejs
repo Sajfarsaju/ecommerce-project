@@ -60,6 +60,11 @@
                   <input min="1" inputmode="numeric" type="number" class="form-control" name="stock" value="<%= productId.stock %>">
                 </select>
               </div>
+              <div class="form-group">
+                <label for="stock">Price</label>
+                  <input min="1" inputmode="numeric" type="number" class="form-control" name="price" value="<%= productId.price %>">
+                </select>
+              </div>
               <input type="hidden" name="id" value="<%= productId._id %>">
               <button type="submit" class="btn btn-primary mr-2">Save</button>
             </form>

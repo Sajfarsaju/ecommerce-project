@@ -71,8 +71,11 @@
 
           <!-- modal -->
           
-            <% if (x.status === 'Delivered' && ((new Date() - new Date(x.date)) / (1000 * 60 * 60 * 24)) <= 1) { %>
-              <a onclick="returnOrder('<%=x._id%>')" type="button" class="btn btn-sm btn-outline-danger"  href="#">Return</a>
+            <% if (x.status === 'Delivered' && ((new Date() - new Date(x.date)) / (1000 * 60 * 60 * 24)) <= 10) { %>
+              <!-- <button  type="button" 
+                class="btn btn-sm btn-outline-danger" data-toggle="modal" data-target="#<%=x._id %>"  href="#">
+                Return</button> -->
+                <a href="/returnSubmit?id=<%= x._id %>" class="btn btn-sm btn-outline-danger">Return</a>
             <% } else { %>
              
               <p style=" color: green;font-size: 16px;">
@@ -83,23 +86,11 @@
           
         </td>
 
-        <!-- modal -->
-        <div id="returnModal" class="modal fade" tabindex="-1" role="dialog">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <!-- Modal content goes here -->
-              <form id="returnForm">
-                <!-- Form fields for return details -->
-                <!-- For example, you can include a textarea for the reason of return -->
-                <div class="form-group">
-                  <label for="returnReason">Reason for Return:</label>
-                  <textarea class="form-control" id="returnReason" name="returnReason" rows="3" required></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
-              </form>
-            </div>
-          </div>
-        </div>
+  
+
+
+        
+          <!-- </div> -->
         <!--  -->
         <% }else{ %>
         <td style="color: red; font-size: 16px;" >
@@ -121,47 +112,17 @@
 
 <!-- modal -->
 <script>
-  function returnOrder(orderId) {
-  // Set the orderId to a hidden field in the form
-  document.getElementById("orderId").value = orderId;
-  // Show the modal
-  $('#returnModal').modal('show');
+  function validateForm(id) {
+  var inputField = document.getElementById('form9Example1');
+  var errorMessage = document.getElementById('error-message');
+
+  if (inputField.value === '0') {
+    errorMessage.textContent = 'Fields are empty. Please fill in the form.';
+  } else {
+    errorMessage.textContent = ''; // Clear any previous error message
+    returnOrder(id); // Call the original returnOrder function if the form is valid
+  }
 }
-
-// Handle form submission
-document.getElementById("returnForm").addEventListener("submit", function (event) {
-  event.preventDefault(); // Prevent the form from submitting normally
-
-  // Get the order ID from the hidden field
-  var orderId = document.getElementById("orderId").value;
-
-  // Get the return reason from the textarea
-  var returnReason = document.getElementById("returnReason").value;
-
-  // Perform an AJAX request to submit the form data and trigger the return action
-  // You'll need to replace this with your actual AJAX code to handle the submission
-  // Here's an example using jQuery:
-  $.ajax({
-    url: "/returnOrder",
-    type: "POST",
-    data: {
-      orderId: orderId,
-      returnReason: returnReason
-    },
-    success: function (response) {
-      // Handle the success response
-      // For example, display a success message or redirect the user
-      console.log("Return successful");
-      // Hide the modal
-      $('#returnModal').modal('hide');
-    },
-    error: function (error) {
-      // Handle the error response
-      // For example, display an error message to the user
-      console.error("Return failed", error);
-    }
-  });
-});
 
 </script>
 <!--  -->

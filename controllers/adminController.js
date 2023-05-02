@@ -54,7 +54,7 @@ const loadDashboard = async(req,res,next)=>{
         else{
           categoryCount[category] = 1;
         }
-        // console.log(order.product)
+        
       });
     });
 
@@ -122,7 +122,7 @@ const loadDashboard = async(req,res,next)=>{
   }
 ]);
 
-  // console.log(weeklySales);
+  
   const date = weeklySales.map((item) => {
       return item._id;
   });
@@ -465,7 +465,7 @@ const salesReport = async(req,res,next)=>{
         }).populate
             ('product.productId')
 
-        // console.log(salesdata);
+        
 
         res.render('salesReport', { sales: salesdata })
     }

@@ -8,6 +8,8 @@ const path = require('path');
 const fs = require('fs');
 const { log } = require('console');
 
+
+/////////// LOAD CATEGORIES //////////////////
 const showCategory = async(req,res,next)=> {
   try {
     const categories = await category.find({});
@@ -22,7 +24,11 @@ const showCategory = async(req,res,next)=> {
     next(error.message)
   }
 }
+////////////////////////////////////////////
 
+
+
+///////////// LAOD ADD NEW CATEGORY PAGE /////////////
 const createCategory = async(req,res,next)=> {
   try {
     if(req.session.admin_id){
@@ -35,9 +41,10 @@ const createCategory = async(req,res,next)=> {
     next(error.message)
   }
 }
+////////////////////////////////////////////////
 
 
-// 
+////////////// ADD NEW CATEGORY  ////////////////////
 const addCategory = async (req, res, next) => {
   try {
       const catName = req.body.category
@@ -50,7 +57,7 @@ const addCategory = async (req, res, next) => {
         const capitalizedStr = capitalize(catName); 
 
       const categories = await category.find({ name: capitalizedStr });
-      console.log(categories);
+     
       if (categories.length > 0  ) {
         res.render('addCategory', { message: "Category Already Exist" });
       } else if (
@@ -78,9 +85,10 @@ const addCategory = async (req, res, next) => {
     next(error.message);
   }
 };
+////////////////////////////////////////////////////////
 
 
-
+/////////////// CATEGORY DELETE ////////////////////
 const deleteCategory = async(req,res,next)=>{
   try {
     if(req.session.admin_id){
@@ -93,18 +101,10 @@ const deleteCategory = async(req,res,next)=>{
     next(error.message);
   }
 }
+//////////////////////////////////////////////
 
-// const editCategory = async(req,res,next)=> {
-//   try {
-//     if(req.session.admin_id){
-//       const id = req.query.id;
-//       const catogeries = await category.findById({_id:id})
-//       res.render('editCategory', { catogeries })
-//     }
-//   } catch (error) {
-//     next(error.message)
-//   }
-// }
+
+////////////// LOAD EDIT CATEGORY //////////////
 const editCategory = async (req, res, next) => {
   try {
     if (req.session.admin_id) {
@@ -118,10 +118,10 @@ const editCategory = async (req, res, next) => {
     next(error.message);
   }
 };
+////////////////////////////////////////////////
 
 
-
-
+//////////// UPDATE CATEGORY AFTER EDIT ///////////////
 const updateCategory = async (req, res, next) => {
   try {
     if (req.session.admin_id) {
@@ -170,86 +170,10 @@ const updateCategory = async (req, res, next) => {
     next(error.message);
   }
 };
+/////////////////////////////////////////////////////////
 
 
-// const updateCategory = async (req, res, next) => {
-//   try {
-//     if (req.session.admin_id) {
-//       const catName = req.body.category;
-//       const capitalize = (catName) => {
-//         const firstLetter = catName.charAt(0).toUpperCase();
-//         const remainingLetters = catName.slice(1).toLowerCase();
-//         return firstLetter + remainingLetters;
-//       };
-
-//       const capitalizedStr = capitalize(catName);
-
-//       const categories = await category.find({ name: capitalizedStr });
-//       console.log(categories);
-//       if (categories.length > 0) {
-//         res.redirect('/admin/category',{message:"Category already exists!"});
-//       } else if (
-//         catName.trim().length === 0 ||
-//         catName.length < 3 ||
-//         req.body.description.trim() === ''
-//       ) {
-//         res.redirect('/admin/category',{message:"Category already exists"});
-
-//       } else {
-//         const updatedCategory = await category.findOneAndUpdate(
-//           { _id: req.body.id },
-//           { $set: { name: capitalizedStr, description: req.body.description } }
-//         );
-
-//         if (updatedCategory) {
-//           const category = await category.find();
-//           res.redirect('/admin/category', { category: category });
-//         } else {
-//           console.log('Operation Failed');
-//         }
-//       }
-//     } else {
-//       res.redirect('/admin/login'); // Redirect to login page or handle unauthorized access
-//     }
-//   } catch (error) {
-//     next(error.message);
-//   }
-// };
-
-
-// const updateCategory = async(req,res,next)=> {
-//   try {
-    
-
-
-//     if(req.session.admin_id){
-//       const updatedCategory = await category.findOneAndUpdate({_id:req.body.id},{$set:{name:req.body.category,description:req.body.description}})
-//     }
-//     res.redirect('/admin/category')
-//   } catch (error) {
-//     next(error.message)
-//   }
-// }
-
-// const updateCategory = async(req,res,next)=>{
-//   try {
-//     if(req.session.admin_id){
-//       if(req.files){
-//         const updateCategory = await category.findByIdAndUpdate({_id:req.body.id},{$set:{image:req.body.image}});
-
-//       }
-//       else{
-//         const updateCategory = await category.findOneAndUpdate({_id:req.body.id},{$set:{name:req.body.category}});
-//         console.log(req.body.id);
-//       }
-//       res.redirect('/admin/category')
-//     }
-//   } catch (error) {
-//     console.log(error.message);
-//     next(error.message);
-//   }
-// } 
-
+////////////// CATEGORY BLOCK & UNBLOCK ///////////////////
 const categoryControl = async(req,res,next)=>{
   try {
     const id = req.query.id;
@@ -269,7 +193,10 @@ const categoryControl = async(req,res,next)=>{
     next(error.message)
   }
 }
+///////////////////////////////////////////////
 
+
+/////////////// LOAD BANNER ////////////////
 const showBanner = async(req,res,next)=>  {
   try {
     const bannerInfo = await Banner.find({})
@@ -280,7 +207,10 @@ const showBanner = async(req,res,next)=>  {
     next(error.message)
   }
 }
+/////////////////////////////////////////
 
+
+/////////////// LOAD ADD NEW BANNER ///////////
 const addBanner = async(req,res,next)=> {
   try {
     if(req.session.admin_id){
@@ -293,7 +223,10 @@ const addBanner = async(req,res,next)=> {
     next(error.message)
   }
 }
+////////////////////////////////////////////
 
+
+///////////// UPDATE AFTER ADD NEW BANNER ////////
 const newBanner = async(req,res,next)=> {
   try {
     const addBannerData = new Banner({
@@ -313,7 +246,10 @@ const newBanner = async(req,res,next)=> {
     next(error.message)
   }
 }
+/////////////////////////////////////////////
 
+
+//////////// LOAD BANNER EDIT ////////////////
 const editBannerload = async (req,res,next)=>{
 
   try {
@@ -324,7 +260,10 @@ const editBannerload = async (req,res,next)=>{
     next(error.message)
   }
 }
+//////////////////////////////////////////////
 
+
+/////// UPDATE AFTER EDIT BANNER /////////////
 const updateProduct = async(req,res)=>{
   const id = req.query.id
           const bannerData = await Banner.findOne({_id:id})
@@ -337,10 +276,10 @@ const updateProduct = async(req,res)=>{
         for(file of req.files){
           bannerData.image.push(file.filename)
       }
-      console.log(bannerData.image)
+     
       
       }
-      console.log("hwhwdhd");
+      
       
           
           await Banner.updateOne({_id:id},{$set:{
@@ -357,7 +296,7 @@ const updateProduct = async(req,res)=>{
   }
 }
 }
-
+///////////////////////////////////////////////////
 
 
 module.exports = {

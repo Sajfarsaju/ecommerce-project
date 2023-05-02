@@ -22,6 +22,10 @@ const categorySchema = mongoose.Schema({
   list:{
     type:Number,
     required:false
+  },
+  discount:{
+    type:Number,
+    default:0
   }
 
 });

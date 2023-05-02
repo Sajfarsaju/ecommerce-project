@@ -25,8 +25,20 @@ const productSchema = new mongoose.Schema({
     default:true
   },
   stock:{
-    type:String,
+    type:Number,
     required:true
+  },
+  discount:{
+    type:Number,
+    default:0
+   },
+   offerStatus:{
+    type:Boolean,
+    default:true
+   },
+  discountPrice:{
+    type:Number,
+    default:0
   },
   price:{
     type:Number,

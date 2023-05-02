@@ -1,0 +1,33 @@
+<%- include('../layouts/header.ejs') %> 
+
+<%- include('../layouts/navbar.ejs') %>
+<%- include('../layouts/sidebar.ejs') %> 
+
+<form name="editCatOffer" action="/admin/editCatOffer/<%=offers._id%>" method="post" class="category-offers-form">
+    <div>
+      <h2>Category offers</h2>
+    </div>
+  
+    <div class="form-group">
+      <label for="exampleInputEmail1">Category name</label>
+      <input type="text" name="categoryName" value="<%=offers.name%>" class="form-control" id="" aria-describedby="" placeholder="" disabled>
+      <small id="emailHelp" class="form-text text-muted"></small>
+    </div>
+
+  
+       
+        <input type="hidden" name="category" value="<%=offers.name%>">
+       
+     
+  
+    <div class="form-group">
+      <label for="exampleInputPassword1">Discount</label>
+      <input type="number" name="discount" class="form-control" value="<%=offers.discount%>" id="exampleInputPassword1" placeholder="" >
+    </div>
+    
+    <div class="form-group mt-3">
+      <button type="submit" class="btn btn-primary">Save Changes</button>
+    </div>
+  </form>
+
+<%- include('../layouts/footer.ejs') %>
