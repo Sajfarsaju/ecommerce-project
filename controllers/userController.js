@@ -1593,7 +1593,7 @@ const returnFormLoad = async(req,res,next)=>{
     const userData = await User.findOne({})
     const orderData = await order.findOne({_id:id})
    
-    let msg;
+    let message;
     res.render("returnForm",{ 
       category: categoryData,
      
