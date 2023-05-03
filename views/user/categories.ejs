@@ -71,6 +71,12 @@
                       <div class="mt-3">
                         <% if (x.discountPrice === x.price || x.discountPrice === 0) { %>
                           <span class="mr-4">₹<%= x.price %></span>
+
+                          <% } else if( x.discountPrice > x.price ){ %>
+                            
+                          <span class="mr-4">₹<%= Math.floor(x.proDiscPrice) %><s style="color: grey;">₹<%= x.price %></s></span>
+
+
                           <% } else { %>
                           <span class="mr-4">₹<%= Math.floor(x.discountPrice) %><s style="color: grey;">₹<%= x.price %></s></span>
                           <% } %>

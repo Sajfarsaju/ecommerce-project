@@ -40,6 +40,14 @@ const productSchema = new mongoose.Schema({
     type:Number,
     default:0
   },
+  proDiscPrice:{
+    type:Number,
+    default:0
+  },
+  discountPers:{
+    type:Number,
+    default:0
+  },
   price:{
     type:Number,
     required:true

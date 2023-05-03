@@ -34,7 +34,7 @@
             <th scope="col" class="text-center">Product Name</th>
             <th scope="col" class="text-center">Price</th>
             <th scope="col" class="text-center">Discount Price</th>
-            <th scope="col" class="text-center">Discount Percentage</th>
+            <th scope="col" class="text-center">Discount Amount</th>
             <th scope="col" class="text-center">Actions</th>
           </tr>
         </thead>
@@ -44,8 +44,8 @@
             <td class="text-center"><%= index+1 %></td>
             <td class="text-center"><%= offers.name %></td>
             <td class="text-center"><%= offers.price %></td>
-            <td class="text-center"><%= offers.discountPrice %></td>
-            <td class="text-center"><%= offers.discount %></td>
+            <td class="text-center"><%= offers.proDiscPrice %></td>
+            <td class="text-center"><%= offers.discountPers %></td>
             <td class="text-center">
             <!-- <button type="button" class="btn btn-danger" onclick="location.href='/admin/editProOffer/<%= offers._id %>'">Edit</button> -->
             <a type="button"onclick="location.href='/admin/editProOffer/<%= offers._id %>'" ><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="Green" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit">

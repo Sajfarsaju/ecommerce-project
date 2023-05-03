@@ -273,7 +273,7 @@ res.render('productManagement',{offer})
 ///////////// LOAD EDIT PRODUCT OFFER ////////////
 const productOfferEdit=async(req,res,next)=>{
   try {
-      const offers=await product.findOne({_id:req.params.id})
+      const offers = await product.findOne({_id:req.params.id})
      
       
       res.render('editProductManage',{offers})
@@ -289,19 +289,20 @@ const productOfferEditPost=async(req,res,next)=>{
       
       const products = await product.findOne({_id:req.params.id})
       const price = products?.originalPrice ?? products.price
-      console.log(req.body.discount+"1");
+      console.log(req.body.prodiscount+"aaaaaaaaaaa");
       
-      const disPer = Math.round((parseFloat(req.body.discount)/100) * price)
-      console.log(req.body.discount+"2");
-      console.log(disPer+"3");
+      const disPer = Math.round((parseFloat(req.body.prodiscount)/price) * 100)
+      console.log(req.body.prodiscount+"bbbbbbbbbbbbb");
+      console.log(disPer+"ccccccccccccccccccc");
       let originalPrice=products?.originalPrice
       if(!originalPrice){
 
           originalPrice= products.price
+          console.log(originalPrice+"ddddddddddd")
       }
-      const disPrice=(originalPrice - parseFloat(req.body.discount)).toFixed(2)
-      console.log(disPrice);
-      await product.updateOne({_id:req.params.id},{$set:{price:disPrice,originalPrice:originalPrice,discountPrice:req.body.discountPrice,discount:disPer}}) 
+      const disPrice=(originalPrice - parseFloat(req.body.prodiscount)).toFixed(2)
+      console.log(disPrice+"eeeeeeeeeeee");
+      await product.updateOne({_id:req.params.id},{$set:{proDiscPrice:disPrice,prodiscountPrice:req.body.discountPrice,discountPers:req.body.prodiscount}}) 
       res.redirect('/admin/productOffer')
   } catch (error) {
     next(error.message)
