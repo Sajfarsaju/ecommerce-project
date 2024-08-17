@@ -3,6 +3,7 @@ const User = require('../models/userModel');
 const isLogin = async(req,res,next)=> {
   try {
     if(req.session.user_id){
+      console.log(req.session.user_id)
       next()
     }
     else{

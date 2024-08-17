@@ -21,36 +21,12 @@
                   <input type="email" class="form-control " id="form3Example3c email" name="email" style="border-radius: 0px; font-size: 17px; border: #71cd1494 solid 1px; height: 50px;" placeholder="Enter your email" required>
                 </div>
 
-                <!-- <div class="form-group">
-                  <label for="password">Password</label>
-                  <input type="password" class="form-control " id="password" name="password" placeholder="Enter your password" required>
-                </div>
-                <div class="form-group">
-                  <label for="confirm_password">Confirm Password</label>
-                  <input type="password" class="form-control " id="confirm_password" name="confirm_password" placeholder="Enter your password again" required>
-                  <div class="invalid-feedback">
-                    <h4>Passwords do not match.</h4>
-                  </div>
-                </div> -->
-
-                <!-- this is checking all character but if passwrod is very weak form going to otp page -->
-                <!-- <div class="form-group">
-                  <label for="password">Password</label>
-                  <input type="password" class="form-control " id="password" name="password" placeholder="Enter your password" required>
-                  <div id="password-strength-container"></div>
-                </div>
-                <div class="form-group">
-                  <label for="confirm_password">Confirm Password</label>
-                  <input type="password" class="form-control " id="confirm_password" name="confirm_password" placeholder="Enter your password again" required>
-                  <div class="invalid-feedback">
-                    <h4>Passwords do not match.</h4>
-                  </div>
-                </div> -->
-
                 <div class="form-group">
                   <!-- <label for="password"></label> -->
                   <input type="password" class="form-control " id="password" name="password" style="border-radius: 0px; font-size: 17px; border: #71cd1494 solid 1px; height: 50px;" placeholder="Enter your password" required>
                   <div id="password-strength-container"></div>
+
+
                 </div>
                 <div class="form-group">
                   <!-- <label for="confirm_password"></label> -->
@@ -58,6 +34,8 @@
                   <div class="invalid-feedback">
                     Passwords do not match.
                   </div>
+                  <div id="password-message" class="mt-2" style="color: #808080;">Password: 1 lowercase, 1 uppercase, 1 digit, 1 special (!@#$), min 6 chars.</div>
+
                 </div>
                 
 
@@ -124,6 +102,8 @@
       passwordStrengthContainer.innerHTML = 'Password strength: Strong';
     } else if (passwordStrength === 'very_strong') {
       passwordStrengthContainer.innerHTML = 'Password strength: Very strong';
+    } else if (passwordStrength === 'null') {
+      passwordStrengthContainer.innerHTML = null;
     }
   });
 
@@ -137,9 +117,11 @@
       return 'fair';
     } else if (password.length >= 6 && password.match(/[a-z]/) && password.match(/[A-Z]/)) {
       return 'weak';
-    } else {
-      return 'very_weak';
+    } else if (password.trim().length === 0 ) {
+      return 'null';
     }
+      return 'very_weak';
+    
   }
   
   function validateForm() {

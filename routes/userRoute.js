@@ -38,7 +38,8 @@ user_route.get('/Logout',auth.isLogin,userController.userlogOut);
 /////////////////// USER SIGNUP ROUTES /////////////////////////
 user_route.get('/signup',auth.isLogout,userController.loadSignup);
 user_route.post('/signup',auth.isLogout,userController.insertUser);
-user_route.post('/otpVerify',auth.isLogin,userController.otpVerify);
+user_route.post('/resendOTP',auth.isLogout,userController.resendOTP);
+user_route.post('/otpVerify',auth.isLogout,userController.otpVerify);
 
 
 /////////////////// RESET PASSWORD ROUTES ///////////////////////////////

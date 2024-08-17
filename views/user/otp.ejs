@@ -1,34 +1,113 @@
 <%- include('../layouts/header.ejs') %>
 
-<form action="/otpVerify" method="POST">
-  <div class="container-scroller">
+ <div class="container-scroller">
     <div class="container-fluid page-body-wrapper full-page-wrapper">
       <div class="content-wrapper d-flex align-items-center auth px-0">
         <div class="row w-100 mx-0">
           <div class="col-lg-4 mx-auto">
             <div class="auth-form-light text-left py-5 px-4 px-sm-5">
               <div class="brand-logo">
-                <h4>OTP VERIFY</h4>
+                 <h4>OTP VERIFY</h4>
               </div>
              
-              <h6 class="font-weight-light">ENTER OTP</h6>
-              <form class="pt-3">
-                <div class="form-group">
-                  <input type="text" class="form-control form-control-lg" id="otp" name="otp" placeholder="enter the otp" required>
-                </div>
-                <div class="mt-3">
-                  <button class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn" type="submit">VERIFY</button>
-                </div>
-                <div class="my-2 d-flex justify-content-between align-items-center">
+              <h6 class="font-weight-light">Check your Mail and enter the OTP</h6>
+              <form action="/otpVerify" method="post" class="pt-3" id="otpForm">
+                 <div class="form-group">
+                   <input type="text" class="form-control form-control-lg" id="otp" name="otp" placeholder="enter the otp" required>
+                 </div>
+                 <% if (typeof message !== 'undefined') { %>
+                  <div class="text-danger" id=".error">
+                    <%= message %>
+                  </div>
+                <% } %>
+                 <div class="mt-3">
+                   <button class="btn btn-block btn-primary btn-md font-weight-medium auth-form-btn" type="submit">VERIFY</button>
+                 </div>
+                 <div class="my-2 d-flex justify-content-between align-items-center">
+                   <!-- Timer Element -->
+                   <div id="timer" class="text-center"></div>
+                   <!-- Resend OTP Button -->
+                   <button id="resend-otp" class="btn text-primary" type="button" onclick="resendOTP()">Resend OTP</button>
+
+                 </div>
               </form>
-            </div>
+             </div>
           </div>
         </div>
       </div>
       <!-- content-wrapper ends -->
     </div>
     <!-- page-body-wrapper ends -->
-  </div>
-  </form>
+ </div>
+
+<script>
+ // Timer countdown logic
+ function startTimer(duration, display, resendButton) {
+     var timer = duration, minutes, seconds;
+     setInterval(function () {
+       minutes = parseInt(timer / 60, 10);
+       seconds = parseInt(timer % 60, 10);
+
+       minutes = minutes < 10 ? "0" + minutes : minutes;
+       seconds = seconds < 10 ? "0" + seconds : seconds;
+
+       display.textContent = minutes + ":" + seconds;
+
+       if (--timer < 0) {
+         timer = duration;
+         // Enable the Resend OTP button when the timer reaches zero
+         resendButton.disabled = false;
+       }
+     }, 1000);
+ }
+
+ // Initialize the timer
+ window.onload = function () {
+     var fiveMinutes = 60 * 1,
+       display = document.querySelector('#timer'),
+       resendButton = document.querySelector('#resend-otp');
+     startTimer(fiveMinutes, display, resendButton);
+
+     // Prevent text selection on the timer
+     display.style.userSelect = "none";
+     display.style.webkitUserSelect = "none";
+     display.style.mozUserSelect = "none";
+     display.style.msUserSelect = "none";
+ };
+
+ //? Function to handle OTP resend
+ function resendOTP() {
+   // Disable the Resend OTP button to prevent multiple clicks
+   document.getElementById("resend-otp").disabled = true;
+
+   // Make an asynchronous request to the server to resend OTP
+   $.ajax({
+     url: "/resendOTP", // Update the endpoint to match your server route
+     type: "POST",
+     success: function(response) {
+       if (response.success) {
+         // Update the UI or provide feedback to the user
+         console.log("OTP Resent successfully");
+         startTimer(60, document.getElementById("timer"), document.getElementById("resend-otp"));
+       } else {
+         // Handle the case where OTP resend fails
+         console.error("Failed to resend OTP");
+       }
+     },
+     error: function(error) {
+       console.error("Error during OTP resend:", error);
+     }
+   });
+ }
+
+</script>
+
+<style>
+ /* Custom CSS for the timer */
+ #timer {
+     font-size: 1.25rem; /* Adjust the font size as needed */
+     color: #808080; /* Match the color with your design */
+ }
+</style>
 
 <%- include('../layouts/user/footer.ejs') %>
